@@ -1,6 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 
+import 'Header.dart';
+import 'InputWrapper.dart';
+
 class SignUpPage extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
@@ -10,14 +13,14 @@ class SignUpPage extends StatelessWidget{
         width: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(begin: Alignment.topCenter, colors: [
-            Colors.cyan[500],
-            Colors.cyan[300],
-            Colors.cyan[400]
+            Colors.cyan[500]!,
+            Colors.cyan[300]!,
+            Colors.cyan[400]!
           ])
         ),
         child: Column(
           children: <Widget>[
-            SizedBox(height: 80,)
+            SizedBox(height: 80,),
             Header(),
             Expanded(child: Container(
               decoration: BoxDecoration(

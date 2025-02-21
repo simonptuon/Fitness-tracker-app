@@ -9,7 +9,7 @@ class InputField extends StatelessWidget{
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
             border: Border(
-              bottom: BorderSide(color: Colors.grey[200])
+              bottom: BorderSide(color: Colors.grey[200]!)
             )
           ),
           child: TextField(
@@ -23,20 +23,34 @@ class InputField extends StatelessWidget{
         Container(
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
-          border: Border(
-          bottom: BorderSide(color: Colors.grey[200])
-        )
-        ),
+            border: Border(
+              bottom: BorderSide(color: Colors.grey[200]!)
+            )
+          ),
           child: TextField(
-          decoration: InputDecoration(
-          hintText: "Enter your password",
-          hintStyle: TextStyle(color: Colors.grey),
-          border: InputBorder.none
+            decoration: InputDecoration(
+              hintText: "Enter your username",
+              hintStyle: TextStyle(color: Colors.grey),
+              border: InputBorder.none
+            ),
+          ),
         ),
+        Container(
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(color: Colors.grey[200]!)
+            )
+          ),
+          child: TextField(
+            decoration: InputDecoration(
+              hintText: "Enter your password",
+              hintStyle: TextStyle(color: Colors.grey),
+              border: InputBorder.none
+            ),
+          ),
         ),
-        ),
-        )
       ],
-    )
+    );
   }
 }
