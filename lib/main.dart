@@ -1,3 +1,4 @@
+import 'package:fitness_app_capstone/CaloriesBurned.dart';
 import 'package:flutter/material.dart';
 import '';
 import 'SignUpPage.dart';
@@ -10,7 +11,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SignUpPage(),
+      home: CaloriesBurned(),
     );
   }
 }
