@@ -36,6 +36,23 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Center(
+          child: PieChart(
+            values: [100, 300, 200, 200, 100],
+            colors: [
+              Colors.yellow,
+              Colors.green,
+              Colors.red,
+              Colors.blue,
+              Colors.grey],
+          ),
+        )
+    );
+  }
+
 
   void _incrementCounter() {
     setState(() {
