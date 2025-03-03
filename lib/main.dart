@@ -1,4 +1,5 @@
 import 'package:fitness_app_capstone/CaloriesBurned.dart';
+import 'package:fitness_app_capstone/pie_chart.dart';
 import 'package:flutter/material.dart';
 import '';
 import 'SignUpPage.dart';
@@ -66,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget builder(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -120,3 +121,4 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
