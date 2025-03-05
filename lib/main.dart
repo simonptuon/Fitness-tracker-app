@@ -3,6 +3,7 @@ import 'package:fitness_app_capstone/pie_chart.dart';
 import 'package:flutter/material.dart';
 import '';
 import 'SignUpPage.dart';
+import 'WorkoutPlans.dart';
 
 void main() => runApp(MyApp());
 
@@ -12,10 +13,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: CaloriesBurned(),
+      home: WorkoutPlans(),
     );
   }
 }
+
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
