@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 const Color textColor = Color(0xFF1E1E1E);
 
 class Header extends StatelessWidget {
+  const Header({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Padding(

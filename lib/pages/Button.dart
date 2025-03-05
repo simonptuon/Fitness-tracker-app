@@ -4,6 +4,8 @@ const Color buttonColor = Color(0xFF29B6F6);
 
 
 class Button extends StatelessWidget{
+  const Button({super.key});
+
   @override
   Widget build(BuildContext context) {
 

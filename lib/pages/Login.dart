@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'Header.dart';
 import 'InputWrapper.dart';
 
-const Color backgroundColor = Color(0xFF7D8DE2);
-const Color backgroundColor2 = Color(0xFF00A1FF);
+const Color backgroundColor = Color(0xFF1c2e65);
+const Color backgroundColor2 = Color(0xFF4e6cbb);
 
 class Login extends StatelessWidget {
+  const Login({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,10 +35,10 @@ class Login extends StatelessWidget {
                     borderRadius: BorderRadius.all(Radius.circular(60)),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.6),
-                        spreadRadius: 10,
+                        color: Colors.black.withOpacity(0.6),
+                        spreadRadius: 5,
                         blurRadius: 40,
-                        offset: Offset(0, 3),
+                        offset: Offset(10, 40),
                       ),
                     ],
                   ),
