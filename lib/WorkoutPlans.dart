@@ -8,7 +8,7 @@ class WorkoutPlans extends StatefulWidget {
 class _WorkoutPlansState extends State<WorkoutPlans> {
   String dropdownValue = 'Exercises';
   List<String> items = [
-    'Beginner', 'Muscle Building', 'Fat Loss', 'Ab Workouts', 'Full Body',
+    'Exercises', 'Beginner', 'Muscle Building', 'Fat Loss', 'Ab Workouts', 'Full Body',
     'Body Weight', 'At Home', 'Cardio', 'Chest Workout', 'Back Workout',
     'Bicep Workout', 'Shoulder Workout', 'Leg Workout', 'Tricep Workout'
   ];
