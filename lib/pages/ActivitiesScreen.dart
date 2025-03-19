@@ -176,9 +176,10 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                             circularIndicator: index == 0 || index == 3 ? CircularPercentIndicator(
                               radius: 50.0,
                               lineWidth: 4.0,
-                              percent: 0.40,
-                              center: const Text(
-                                "42%\nSteps",
+                              percent: index == 0 ? 0.40: 0.12,
+                              center: Text(
+                                index == 0 ?
+                                "42%\nSteps": "372\nKcal",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: iconColor),
                               ),
@@ -187,7 +188,8 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                               circularStrokeCap: CircularStrokeCap.round,
                               animation: true,
                               animationDuration: 1200,
-                            ) : null, // Add CircularPercentIndicator for Steps and Heart cards
+                            ) : null,
+                            // Add CircularPercentIndicator for Steps and Heart cards
                           );
                         },
                       ),
