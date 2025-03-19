@@ -9,9 +9,9 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
   String dropdownValue = 'Exercises';
   List<String> items = [
     'Exercises', 'Beginner', 'Muscle Building', 'Fat Loss', 'Ab Workouts', 'Full Body',
-    'Body Weight', 'At Home', 'Cardio', 'Chest Workout', 'Back Workout',
-    'Bicep Workout', 'Shoulder Workout', 'Leg Workout', 'Tricep Workout'
+    'Body Weight', 'At Home', 'Cardio'
   ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/background.jpg'), // Add a background image
+            image: AssetImage('assets/background.jpg'),
             fit: BoxFit.cover,
           ),
         ),
