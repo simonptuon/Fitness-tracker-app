@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '';
 import 'SignUpPage.dart';
 import 'WorkoutPlans.dart';
+import 'CaloriesBurned.dart';
 
 void main() => runApp(MyApp());
 
