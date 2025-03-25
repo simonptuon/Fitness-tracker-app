@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: WorkoutPlans(),
+      home: CaloriesBurned(),
     );
   }
 }
