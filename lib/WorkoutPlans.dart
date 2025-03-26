@@ -94,7 +94,10 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
         title: Text('Workout Plans', style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.bold, color: Colors.white)),
         backgroundColor: Colors.deepPurple,
       ),
-      body: Container(
+      body: Stack(
+        children: [
+          Image(image: AssetImage('images/Exercise Background Image.webp'), fit: BoxFit.cover, width: double.infinity, height: double.infinity),
+          Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [Colors.deepPurple, Colors.purpleAccent],
@@ -177,6 +180,8 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
           ),
         ),
       ),
+        ]
+      )
     );
   }
 }
