@@ -95,17 +95,22 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
         backgroundColor: Colors.deepPurple,
       ),
       body: Stack(
-        children: [
-          Image(image: AssetImage('images/Exercise Background Image.webp'), fit: BoxFit.cover, width: double.infinity, height: double.infinity),
-          Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.deepPurple, Colors.purpleAccent],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: Center(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('images/Exercise Background Image.webp'),
+                  fit: BoxFit.cover,
+                ),
+                gradient: LinearGradient(
+                  colors: [Colors.deepPurple, Colors.purpleAccent],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+            ),
+
+            Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -175,13 +180,10 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
                     ),
                   );
                 }).toList(),
-              ),
+            ),
             ],
           ),
-        ),
-      ),
-        ]
-      )
-    );
+        ),]
+      ));
   }
 }
