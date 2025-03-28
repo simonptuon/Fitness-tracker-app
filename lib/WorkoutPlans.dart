@@ -59,6 +59,8 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
     'Swimming': 'A full-body workout that improves cardiovascular health and builds muscle strength.',
   };
 
+  final String benchPressImagePath = 'images/Bench Press.webp';
+  final String PushupsImagePath = 'images/Push-ups.webp';
   List<String> currentButtonOptions = [];
 
   @override
@@ -73,7 +75,24 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(exercise),
-          content: Text(exerciseDescriptions[exercise] ?? 'No description available.'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (exercise == 'Bench Press')
+                Image.asset(
+                  benchPressImagePath,
+                  width: 200,
+                  height: 150,
+                ),
+              if (exercise == 'Push-ups')
+                Image.asset(
+                  PushupsImagePath,
+                  width: 200,
+                  height: 150,
+                ),
+              Text(exerciseDescriptions[exercise] ?? 'No description available.'),
+            ],
+          ),
           actions: [
             TextButton(
               child: Text('Close'),
@@ -182,6 +201,7 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
                 }).toList(),
             ),
             ],
+
           ),
         ),]
       ));
