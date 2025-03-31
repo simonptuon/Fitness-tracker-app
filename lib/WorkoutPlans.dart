@@ -60,7 +60,7 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
   };
 
   final String benchPressImagePath = 'images/Bench Press.webp';
-  final String PushupsImagePath = 'images/Push-ups.webp';
+  final String pushupsImagePath = 'images/Push-ups.webp';
   List<String> currentButtonOptions = [];
 
   @override
@@ -86,7 +86,13 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
                 ),
               if (exercise == 'Push-ups')
                 Image.asset(
-                  PushupsImagePath,
+                  pushupsImagePath,
+                  width: 200,
+                  height: 150,
+                ),
+              if (exercise == 'Squats')
+                Image.asset(
+                  'images/Squats.webp',
                   width: 200,
                   height: 150,
                 ),
