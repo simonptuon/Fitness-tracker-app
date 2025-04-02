@@ -14,8 +14,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Task Management',
       debugShowCheckedModeBanner: false,
-<<<<<<< HEAD
-      home: CaloriesBurned(),
+// <<<<<<< HEAD
+      home: WorkoutPlans(),
     );
   }
 }
@@ -53,35 +53,37 @@ class _MyHomePageState extends State<MyHomePage> {
               Colors.red,
               Colors.blue,
               Colors.grey],
-=======
-      theme: ThemeData(
-        fontFamily: 'Cera Pro',
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.black,
-            minimumSize: const Size(double.infinity, 60),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-            ),
->>>>>>> 744eeef3c2fa59828e406974cb1cbca0517ad932
-          ),
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          contentPadding: const EdgeInsets.all(27),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Colors.grey.shade300,
-              width: 3,
-            ),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(width: 3),
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ),
-      ),
-      home: const SignUpPage(),
+// =======
+//       theme: ThemeData(
+//         fontFamily: 'Cera Pro',
+//         elevatedButtonTheme: ElevatedButtonThemeData(
+//           style: ElevatedButton.styleFrom(
+//             backgroundColor: Colors.black,
+//             minimumSize: const Size(double.infinity, 60),
+//             shape: RoundedRectangleBorder(
+//               borderRadius: BorderRadius.circular(15),
+//             ),
+// // >>>>>>> 744eeef3c2fa59828e406974cb1cbca0517ad932
+//           ),
+//         ),
+//         inputDecorationTheme: InputDecorationTheme(
+//           contentPadding: const EdgeInsets.all(27),
+//           enabledBorder: OutlineInputBorder(
+//             borderSide: BorderSide(
+//               color: Colors.grey.shade300,
+//               width: 3,
+//             ),
+//             borderRadius: BorderRadius.circular(10),
+//           ),
+//           focusedBorder: OutlineInputBorder(
+//             borderSide: const BorderSide(width: 3),
+//             borderRadius: BorderRadius.circular(10),
+//           ),
+//         ),
+//       ),
+      // home: const SignUpPage(),
+    ),
+    ),
     );
   }
 }

@@ -64,6 +64,33 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - images/Exercise Background Image.webp
+    - images/Bench Press.webp
+    - images/Push-ups.webp
+    - images/Squats.webp
+    - images/Jumping Jacks.webp
+    - images/Running.webp
+    - images/Cycling Cardio.webp
+    - images/Light Jogging.webp
+    - images/Running Cardio.webp
+    - images/HIIT.webp
+    - images/Yoga.webp
+    - images/Dips.webp
+    - images/Burpees.webp
+    - images/Bicep Curls.webp
+    - images/Lunges.webp
+    - images/Walking.webp
+    - images/Basic Yoga.webp
+    - images/Deadlifts.webp
+    - images/Cycling.webp
+    - images/Crunches.webp
+    - images/Leg Raises.webp
+    - images/Plank.webp
+    - images/Mountain Climbers.webp
+    - images/Pull-ups.webp
+    - images/Pistol Squats.webp
+    - images/Pilates.webp
+    - images/Bodyweight Circuit.webp
+    - images/Swimming.webp
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
