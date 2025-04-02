@@ -1,14 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:fitness_app_capstone/pie_chart.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
+
+class CalorieData {
+  CalorieData(this.date, this.calories);
+  final String date;
+  final double calories;
+}
 
 class CaloriesBurned extends StatelessWidget {
+  final List<CalorieData> calorieData = [
+    CalorieData('Mon', 200),
+    CalorieData('Tue', 300),
+    CalorieData('Wed', 250),
+    CalorieData('Thu', 400),
+    CalorieData('Fri', 350),
+    CalorieData('Sat', 450),
+    CalorieData('Sun', 500),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
           'Calories Burned',
-          style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.bold),
+          style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.bold, color: Colors.white),
         ),
         backgroundColor: Colors.deepPurple,
       ),
@@ -23,40 +39,26 @@ class CaloriesBurned extends StatelessWidget {
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                'Calories Burned',
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              SizedBox(height: 20),
+            children: [
               Container(
-                padding: EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.8),
-                  borderRadius: BorderRadius.circular(10.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 10.0,
-                      offset: Offset(0, 5),
-                    ),
+                height: 300,
+                padding: const EdgeInsets.all(16.0),
+                child: SfCartesianChart(
+                  primaryXAxis: CategoryAxis(),
+                  title: ChartTitle(text: 'Weekly Calories Burned'),
+                  series: <ChartSeries>[
+                    ColumnSeries<CalorieData, String>(
+                      dataSource: calorieData,
+                      xValueMapper: (CalorieData data, _) => data.date,
+                      yValueMapper: (CalorieData data, _) => data.calories,
+                      color: Colors.yellowAccent,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10),
+                      ),
+                    )
                   ],
                 ),
-                child: PieChart(
-                values: [100, 300, 200, 200, 100],
-                colors: [
-                  Colors.yellow,
-                  Colors.green,
-                  Colors.red,
-                  Colors.blue,
-                  Colors.grey,
-                ],
-              ),
               ),
             ],
           ),
@@ -65,86 +67,3 @@ class CaloriesBurned extends StatelessWidget {
     );
   }
 }
-
-// class CaloriesBurned extends StatelessWidget{
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Calories Burned'),
-//       ),
-//       body: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: <Widget>[
-//             Text(
-//               'Calories Burned:',
-//               style: TextStyle(fontSize: 24),
-//             ),
-//             SizedBox(height: 20),
-//             SizedBox(height: 20),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// class CaloriesBurned extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Calories Burned'),
-//       ),
-//       body: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: <Widget>[
-//             Text(
-//               'Calories Burned',
-//               style: Theme.of(context).textTheme.headlineMedium,
-//             ),
-//             SizedBox(height: 20),
-//             BarChart(
-//               BarChartData(
-//                 barGroups: [
-//                   BarChartGroupData(
-//                     x: 0,
-//                     barRods: [
-//                       BarChartRodData(y: 100, colors: [Colors.yellow]),
-//                     ],
-//                   ),
-//                   BarChartGroupData(
-//                     x: 1,
-//                     barRods: [
-//                       BarChartRodData(y: 300, colors: [Colors.green]),
-//                     ],
-//                   ),
-//                   BarChartGroupData(
-//                     x: 2,
-//                     barRods: [
-//                       BarChartRodData(y: 200, colors: [Colors.red]),
-//                     ],
-//                   ),
-//                   BarChartGroupData(
-//                     x: 3,
-//                     barRods: [
-//                       BarChartRodData(y: 200, colors: [Colors.blue]),
-//                     ],
-//                   ),
-//                   BarChartGroupData(
-//                     x: 4,
-//                     barRods: [
-//                       BarChartRodData(y: 100, colors: [Colors.grey]),
-//                     ],
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
