@@ -28,7 +28,7 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
     'Full Body': ['Burpees', 'Jumping Jacks', 'Mountain Climbers'],
     'Body Weight': ['Pull-ups', 'Dips', 'Pistol Squats'],
     'At Home': ['Yoga', 'Pilates', 'Bodyweight Circuit'],
-    'Cardio': ['Running', 'Swimming', 'Cycling'],
+    'Cardio': ['Running Cardio', 'Swimming', 'Cycling Cardio'],
   };
 
   final Map<String, String> exerciseDescriptions = {
@@ -43,7 +43,9 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
     'Bicep Curls': 'An isolation exercise that targets the biceps.',
     'HIIT': 'High-Intensity Interval Training, a form of cardio that alternates between intense bursts of activity and fixed periods of less-intense activity or rest.',
     'Running': 'A cardiovascular exercise that improves endurance and burns calories.',
+    'Running Cardio': 'Running at a moderate to high intensity to improve cardiovascular health and endurance.',
     'Cycling': 'A low-impact exercise that improves cardiovascular health and strengthens the legs.',
+    'Cycling Cardio': 'Cycling at a moderate to high intensity to improve cardiovascular health and endurance.' ,
     'Crunches': 'An abdominal exercise that targets the rectus abdominis.',
     'Leg Raises': 'An exercise that targets the lower abdominal muscles.',
     'Plank': 'An isometric core exercise that involves maintaining a position similar to a push-up for the maximum possible time.',
@@ -93,6 +95,150 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
               if (exercise == 'Squats')
                 Image.asset(
                   'images/Squats.webp',
+                  width: 200,
+                  height: 150,
+                ),
+              if (exercise == 'Jumping Jacks')
+                Image.asset(
+                  'images/Jumping Jacks.webp',
+                  width: 200,
+                  height: 150,
+                ),
+              if (exercise == 'Running')
+                Image.asset(
+                  'images/Running.webp',
+                  width: 200,
+                  height: 150,
+                ),
+              if (exercise == 'Running Cardio')
+                Image.asset(
+                  'images/Running Cardio.webp',
+                  width: 200,
+                  height: 150,
+                ),
+              if (exercise == 'Cycling Cardio')
+                Image.asset(
+                  'images/Cycling Cardio.webp',
+                  width: 200,
+                  height: 150,
+                ),
+              if (exercise == 'Light Jogging')
+                Image.asset(
+                  'images/Light Jogging.webp',
+                  width: 200,
+                  height: 150,
+                ),
+              if (exercise == 'HIIT')
+                Image.asset(
+                  'images/HIIT.webp',
+                  width: 200,
+                  height: 150,
+                ),
+              if (exercise == 'Yoga')
+                Image.asset(
+                  'images/Yoga.webp',
+                  width: 200,
+                  height: 150,
+                ),
+              if (exercise == 'Dips')
+                Image.asset(
+                  'images/Dips.webp',
+                  width: 200,
+                  height: 150,
+                ),
+              if (exercise == 'Burpees')
+                Image.asset(
+                  'images/Burpees.webp',
+                  width: 200,
+                  height: 150,
+                ),
+              if (exercise == 'Bicep Curls')
+                Image.asset(
+                  'images/Bicep Curls.webp',
+                  width: 200,
+                  height: 150,
+                ),
+              if (exercise == 'Lunges')
+                Image.asset(
+                  'images/Lunges.webp',
+                  width: 200,
+                  height: 150,
+                ),
+              if (exercise == 'Walking')
+                Image.asset(
+                  'images/Walking.webp',
+                  width: 200,
+                  height: 150,
+                ),
+              if (exercise == 'Basic Yoga')
+                Image.asset(
+                  'images/Basic Yoga.webp',
+                  width: 200,
+                  height: 150,
+                ),
+              if (exercise == 'Deadlifts')
+                Image.asset(
+                  'images/Deadlifts.webp',
+                  width: 200,
+                  height: 150,
+                ),
+              if (exercise == 'Cycling')
+                Image.asset(
+                  'images/Cycling.webp',
+                  width: 200,
+                  height: 150,
+                ),
+              if (exercise == 'Crunches')
+                Image.asset(
+                  'images/Crunches.webp',
+                  width: 200,
+                  height: 150,
+                ),
+              if (exercise == 'Leg Raises')
+                Image.asset(
+                  'images/Leg Raises.webp',
+                  width: 200,
+                  height: 150,
+                ),
+              if (exercise == 'Plank')
+                Image.asset(
+                  'images/Plank.webp',
+                  width: 200,
+                  height: 150,
+                ),
+              if (exercise == 'Mountain Climbers')
+                Image.asset(
+                  'images/Mountain Climbers.webp',
+                  width: 200,
+                  height: 150,
+                ),
+              if (exercise == 'Pull-ups')
+                Image.asset(
+                  'images/Pull-ups.webp',
+                  width: 200,
+                  height: 150,
+                ),
+              if (exercise == 'Pistol Squats')
+                Image.asset(
+                  'images/Pistol Squats.webp',
+                  width: 200,
+                  height: 150,
+                ),
+              if (exercise == 'Pilates')
+                Image.asset(
+                  'images/Pilates.webp',
+                  width: 200,
+                  height: 150,
+                ),
+              if (exercise == 'Bodyweight Circuit')
+                Image.asset(
+                  'images/Bodyweight Circuit.webp',
+                  width: 200,
+                  height: 150,
+                ),
+              if (exercise == 'Swimming')
+                Image.asset(
+                  'images/Swimming.webp',
                   width: 200,
                   height: 150,
                 ),
