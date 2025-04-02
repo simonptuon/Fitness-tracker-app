@@ -46,18 +46,18 @@ class CaloriesBurned extends StatelessWidget {
                 child: SfCartesianChart(
                   primaryXAxis: CategoryAxis(),
                   title: ChartTitle(text: 'Weekly Calories Burned'),
-                  series: <ChartSeries>[
-                    ColumnSeries<CalorieData, String>(
-                      dataSource: calorieData,
-                      xValueMapper: (CalorieData data, _) => data.date,
-                      yValueMapper: (CalorieData data, _) => data.calories,
-                      color: Colors.yellowAccent,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        topRight: Radius.circular(10),
-                      ),
-                    )
-                  ],
+                  // series: <ChartSeries>[
+                  //   ColumnSeries<CalorieData, String>(
+                  //     dataSource: calorieData,
+                  //     xValueMapper: (CalorieData data, _) => data.date,
+                  //     yValueMapper: (CalorieData data, _) => data.calories,
+                  //     color: Colors.yellowAccent,
+                  //     borderRadius: BorderRadius.only(
+                  //       topLeft: Radius.circular(10),
+                  //       topRight: Radius.circular(10),
+                  //     ),
+                  //   )
+                  // ],
                 ),
               ),
             ],
