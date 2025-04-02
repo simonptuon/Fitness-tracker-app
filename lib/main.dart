@@ -3,6 +3,7 @@ import 'package:fitness_app_capstone/CaloriesBurned.dart';
 import 'package:fitness_app_capstone/pie_chart.dart';
 import 'package:fitness_app_capstone/pages/signup.dart';
 import 'WorkoutPlans.dart';
+// import 'SignUpPage.dart';
 
 void main() => runApp(MyApp());
 
