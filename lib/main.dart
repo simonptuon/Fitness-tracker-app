@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       title: 'Task Management',
       debugShowCheckedModeBanner: false,
 // <<<<<<< HEAD
-      home: WorkoutPlans(),
+      home: SignUpPage(),
     );
   }
 }

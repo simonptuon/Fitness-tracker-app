@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 
 import 'Header.dart';
@@ -7,7 +6,6 @@ import 'InputWrapper.dart';
 class SignUpPage extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: Container(
         width: double.infinity,
