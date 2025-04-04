@@ -1,4 +1,8 @@
+import 'package:fitness_app_capstone/views/pages/Login.dart';
+import 'package:fitness_app_capstone/views/pages/ActivitiesScreen.dart';
+import 'package:fitness_app_capstone/views/pages/Water.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart'; // Import Google Fonts
 import 'package:fitness_app_capstone/CaloriesBurned.dart';
 import 'package:fitness_app_capstone/pie_chart.dart';
 import 'package:fitness_app_capstone/pages/signup.dart';
@@ -14,24 +18,45 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Task Management',
       debugShowCheckedModeBanner: false,
-// <<<<<<< HEAD
+      theme: ThemeData(
+        textTheme: GoogleFonts.poppinsTextTheme(), // Apply Poppins font globally
+        fontFamily: 'Cera Pro',
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.black,
+            minimumSize: const Size(double.infinity, 60),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+          ),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          contentPadding: const EdgeInsets.all(27),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.grey.shade300,
+              width: 3,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: const BorderSide(width: 3),
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+      ),
       home: SignUpPage(),
+      routes: {
+        '/login': (context) => Login(),
+        '/activities': (context) => ActivitiesScreen(),
+        '/consumption': (context) => Water(),
+      },
     );
   }
 }
 
-
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
@@ -41,49 +66,22 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Center(
-          child: PieChart(
-            values: [100, 300, 200, 200, 100],
-            colors: [
-              Colors.yellow,
-              Colors.green,
-              Colors.red,
-              Colors.blue,
-              Colors.grey],
-// =======
-//       theme: ThemeData(
-//         fontFamily: 'Cera Pro',
-//         elevatedButtonTheme: ElevatedButtonThemeData(
-//           style: ElevatedButton.styleFrom(
-//             backgroundColor: Colors.black,
-//             minimumSize: const Size(double.infinity, 60),
-//             shape: RoundedRectangleBorder(
-//               borderRadius: BorderRadius.circular(15),
-//             ),
-// // >>>>>>> 744eeef3c2fa59828e406974cb1cbca0517ad932
-//           ),
-//         ),
-//         inputDecorationTheme: InputDecorationTheme(
-//           contentPadding: const EdgeInsets.all(27),
-//           enabledBorder: OutlineInputBorder(
-//             borderSide: BorderSide(
-//               color: Colors.grey.shade300,
-//               width: 3,
-//             ),
-//             borderRadius: BorderRadius.circular(10),
-//           ),
-//           focusedBorder: OutlineInputBorder(
-//             borderSide: const BorderSide(width: 3),
-//             borderRadius: BorderRadius.circular(10),
-//           ),
-//         ),
-//       ),
-      // home: const SignUpPage(),
-    ),
-    ),
+      body: Center(
+        child: PieChart(
+          values: [100, 300, 200, 200, 100],
+          colors: [
+            Colors.yellow,
+            Colors.green,
+            Colors.red,
+            Colors.blue,
+            Colors.grey
+          ],
+        ),
+      ),
     );
   }
 }
