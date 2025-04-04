@@ -1,6 +1,6 @@
 name: fitness_app_capstone
 description: "A new Flutter project."
-publish_to: "none" 
+publish_to: "none"
 
 version: 1.0.0+1
 
@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   percent_indicator: ^4.2.2
-  http: ^0.13.6
+  http: ^1.3.0
   firebase_core: ^3.12.1
   firebase_auth: ^5.5.1
   cupertino_icons: ^1.0.8
@@ -20,6 +20,9 @@ dependencies:
   lottie: ^3.3.1
   google_fonts: ^5.0.0
   shared_preferences: ^2.0.15
+  pedometer: ^4.1.0
+  permission_handler: ^10.2.0
+
 
 dev_dependencies:
   flutter_test:

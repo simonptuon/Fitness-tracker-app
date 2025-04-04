@@ -1,14 +1,17 @@
-import 'package:fitness_app_capstone/views/pages/Login.dart';
-import 'package:fitness_app_capstone/views/pages/ActivitiesScreen.dart';
-import 'package:fitness_app_capstone/views/pages/Water.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart'; // Import Google Fonts
 import 'package:fitness_app_capstone/CaloriesBurned.dart';
 import 'package:fitness_app_capstone/pie_chart.dart';
 import 'package:fitness_app_capstone/pages/signup.dart';
+import 'package:fitness_app_capstone/views/pages/Login.dart';
+import 'package:fitness_app_capstone/views/pages/ActivitiesScreen.dart';
+import 'package:fitness_app_capstone/views/pages/Water.dart';
 import 'WorkoutPlans.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -78,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Colors.green,
             Colors.red,
             Colors.blue,
-            Colors.grey
+            Colors.grey,
           ],
         ),
       ),
