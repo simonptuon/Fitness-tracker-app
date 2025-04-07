@@ -40,6 +40,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // backgroundColor: Colors.deepPurple,
       body: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Form(
@@ -48,10 +49,12 @@ class _SignUpPageState extends State<SignUpPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                'Sign Up.',
+                'Sign Up',
                 style: TextStyle(
                   fontSize: 50,
                   fontWeight: FontWeight.bold,
+                  // color: Colors.white,
+                  color: Colors.black,
                 ),
               ),
               const SizedBox(height: 10),
@@ -97,6 +100,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.white,
+                    // color: Colors.black,
                   ),
                 ),
               ),
