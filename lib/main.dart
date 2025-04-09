@@ -5,14 +5,12 @@ import 'firebase_options.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fitness_app_capstone/pie_chart.dart';
 import 'package:fitness_app_capstone/pages/signup.dart';
-<<<<<<< HEAD
 import 'package:fitness_app_capstone/views/pages/Login.dart';
 import 'package:fitness_app_capstone/views/pages/ActivitiesScreen.dart';
 import 'package:fitness_app_capstone/views/pages/Water.dart';
-=======
 import 'WorkoutPlans.dart';
-// import 'SignUpPage.dart';
->>>>>>> Justin
+
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
