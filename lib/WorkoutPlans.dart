@@ -63,6 +63,36 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
     'Swimming': 'A full-body workout that improves cardiovascular health and builds muscle strength.',
   };
 
+  final Map<String, String> exerciseStrategies = {
+    'Push-ups': 'Aim for 3 sets of 10-15 reps. Focus on proper form, keeping your body in a straight line.',
+    'Squats': 'Perform 3 sets of 12-15 reps. Ensure your knees don\'t go past your toes and keep your back straight.',
+    'Lunges': 'Do 3 sets of 10-12 reps per leg. Keep your front knee aligned with your ankle.',
+    'Walking': 'Start with 30 minutes of brisk walking per day. Gradually increase the duration and intensity.',
+    'Light Jogging': 'Jog for 20-30 minutes at a comfortable pace. Focus on maintaining steady breathing.',
+    'Basic Yoga': 'Attend a beginner yoga class or follow a video tutorial. Hold each pose for 30 seconds, focusing on breathing.',
+    'Bench Press': 'Perform 3 sets of 8-12 reps. Use a spotter if lifting heavy weights. Lower the bar slowly and push up explosively.',
+    'Deadlifts': 'Do 1-3 sets of 5-8 reps. Maintain a straight back and engage your core. Start with lighter weights to perfect your form.',
+    'Bicep Curls': 'Complete 3 sets of 10-15 reps. Keep your elbows close to your body and control the movement.',
+    'HIIT': 'Alternate between 30 seconds of high-intensity exercise and 30 seconds of rest. Repeat for 15-20 minutes.',
+    'Running': 'Start with a 20-30 minute run at a moderate pace. Gradually increase your distance and speed.',
+    'Running Cardio': 'Run for 30-45 minutes at a moderate to high intensity. Include interval training for better results.',
+    'Cycling': 'Cycle for 30-45 minutes at a moderate pace. Vary your speed and resistance.',
+    'Cycling Cardio': 'Cycle for 45-60 minutes at a moderate to high intensity. Incorporate hills and sprints.',
+    'Crunches': 'Do 3 sets of 15-20 reps. Focus on contracting your abdominal muscles and avoid pulling on your neck.',
+    'Leg Raises': 'Perform 3 sets of 15-20 reps. Keep your legs straight and controlled.',
+    'Plank': 'Hold for 30-60 seconds, repeat 3 times. Engage your core and maintain a straight line from head to heels.',
+    'Burpees': 'Do 3 sets of 10-15 reps. Move quickly and focus on full-body engagement.',
+    'Jumping Jacks': 'Perform for 30-60 seconds, repeat 3-5 times. Keep a steady pace and engage your entire body.',
+    'Mountain Climbers': 'Do for 30-60 seconds, repeat 3-5 times. Alternate legs quickly and engage your core.',
+    'Pull-ups': 'Aim for 3 sets of as many reps as possible. Use assisted pull-up bands if needed.',
+    'Dips': 'Do 3 sets of 8-12 reps. Control the movement and focus on your triceps.',
+    'Pistol Squats': 'Perform 3 sets of 5-8 reps per leg. Use assistance if needed and maintain balance.',
+    'Yoga': 'Attend a yoga class or follow a video. Focus on your breathing and holding each pose.',
+    'Pilates': 'Attend a class or follow a video. Focus on slow, controlled movements and core engagement.',
+    'Bodyweight Circuit': 'Perform each exercise in the circuit for 30-60 seconds, with minimal rest between exercises. Repeat the circuit 3-5 times.',
+    'Swimming': 'Swim for 30-45 minutes. Vary your strokes and intensity for a full-body workout.',
+  };
+
   final String benchPressImagePath = 'images/Bench Press.webp';
   final String pushupsImagePath = 'images/Push-ups.webp';
   List<String> currentButtonOptions = [];
@@ -245,6 +275,8 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
                   height: 150,
                 ),
               Text(exerciseDescriptions[exercise] ?? 'No description available.'),
+              SizedBox(height: 10),
+              Text('Recommended: ${exerciseStrategies[exercise] ?? 'No strategy available.'}', style: TextStyle(fontStyle: FontStyle.italic)),
             ],
           ),
           actions: [
