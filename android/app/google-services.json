@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "502129494418",
+    "firebase_url": "https://fitness-tracker-fd9b4-default-rtdb.firebaseio.com",
     "project_id": "fitness-tracker-fd9b4",
     "storage_bucket": "fitness-tracker-fd9b4.firebasestorage.app"
   },

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class WorkoutPlans extends StatefulWidget {
+  const WorkoutPlans({super.key});
+
   @override
   _WorkoutPlansState createState() => _WorkoutPlansState();
 }
@@ -333,14 +335,6 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
                     onPressed: () {
                       showExerciseDialog(option);
                     },
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.fitness_center, color: Colors.white),
-                        SizedBox(width: 8),
-                        Text(option, style: TextStyle(fontFamily: 'Roboto')),
-                      ],
-                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.deepPurple,
                       foregroundColor: Colors.white,
@@ -348,6 +342,14 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.fitness_center, color: Colors.white),
+                        SizedBox(width: 8),
+                        Text(option, style: TextStyle(fontFamily: 'Roboto')),
+                      ],
                     ),
                   );
                 }).toList(),

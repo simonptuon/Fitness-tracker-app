@@ -21,9 +21,10 @@ dependencies:
   google_fonts: ^5.0.0
   shared_preferences: ^2.0.15
   pedometer: ^4.1.0
-  permission_handler: ^10.2.0
+  permission_handler: ^11.0.0
 
 
+  collection: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

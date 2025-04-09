@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart'; // Import Google Fonts
-import 'package:fitness_app_capstone/CaloriesBurned.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
+import 'package:google_fonts/google_fonts.dart';
 import 'package:fitness_app_capstone/pie_chart.dart';
 import 'package:fitness_app_capstone/pages/signup.dart';
 import 'package:fitness_app_capstone/views/pages/Login.dart';
 import 'package:fitness_app_capstone/views/pages/ActivitiesScreen.dart';
 import 'package:fitness_app_capstone/views/pages/Water.dart';
-import 'WorkoutPlans.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MyApp());
+
+  // Initialize Firebase before the app starts
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -22,7 +29,7 @@ class MyApp extends StatelessWidget {
       title: 'Task Management',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        textTheme: GoogleFonts.poppinsTextTheme(), // Apply Poppins font globally
+        textTheme: GoogleFonts.poppinsTextTheme(),
         fontFamily: 'Cera Pro',
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
@@ -48,11 +55,11 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: SignUpPage(),
+      home: const SignUpPage(),
       routes: {
-        '/login': (context) => Login(),
-        '/activities': (context) => ActivitiesScreen(),
-        '/consumption': (context) => Water(),
+        '/login': (context) => const Login(),
+        '/activities': (context) => const ActivitiesScreen(),
+        '/consumption': (context) => const Water(),
       },
     );
   }
@@ -60,7 +67,6 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
   final String title;
 
   @override
@@ -68,7 +74,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  final int _counter = 0;
 
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:fitness_app_capstone/pages/pedometer.dart';
-import 'pedometer.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});

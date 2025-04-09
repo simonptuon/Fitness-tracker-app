@@ -17,7 +17,9 @@ class CaloriesBurned extends StatelessWidget {
     CalorieData('Sat', 450),
     CalorieData('Sun', 500),
   ];
-
+/*
+  const CaloriesBurned({super.key});
+*/
   @override
   Widget build(BuildContext context) {
     return Scaffold(

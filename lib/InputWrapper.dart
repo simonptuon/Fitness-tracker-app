@@ -4,6 +4,8 @@ import 'Button.dart';
 import 'InputField.dart';
 
 class InputWrapper extends StatelessWidget{
+  const InputWrapper({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Padding(

@@ -9,10 +9,10 @@ class PieChart extends StatelessWidget {
   final List<Color> colors;
 
   const PieChart({
-    Key? key,
+    super.key,
     required this.values,
     required this.colors,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
