@@ -1,0 +1,2 @@
+C:/Users/simon/StudioProjects/Fitness-tracker-app/android/app/.cxx/Debug/g2b446s5/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/simon/StudioProjects/Fitness-tracker-app/android/app/.cxx/Debug/g2b446s5/x86_64/CMakeFiles/rebuild_cache.dir
