@@ -1,10 +1,10 @@
 import 'package:fitness_app_capstone/data/notifiers.dart';
-import 'package:fitness_app_capstone/views/pages/history_water_page.dart';
-import 'package:fitness_app_capstone/views/pages/report_water_page.dart';
-import 'package:fitness_app_capstone/views/pages/water_home_page.dart';
+import 'package:fitness_app_capstone/pages/history_water_page.dart';
+import 'package:fitness_app_capstone/pages/report_water_page.dart';
+import 'package:fitness_app_capstone/pages/water_home_page.dart';
 import 'package:flutter/material.dart';
 
-import '../widgets/navbar.dart';
+import '../pages/widgets/navbar.dart';
 import 'account.dart';
 
 List<Widget> pages = [

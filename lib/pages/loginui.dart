@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/Header.dart';
-import '../widgets/inputWrapper.dart';
+import '../pages/widgets/Header.dart';
+import '../pages/widgets/inputWrapper.dart';
 
 const Color backgroundColor = Color(0xFF1c2e65);
 const Color backgroundColor2 = Color(0xFF4e6cbb);
