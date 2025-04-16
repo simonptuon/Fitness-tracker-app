@@ -17,6 +17,8 @@ class CaloriesBurned extends StatelessWidget {
     CalorieData('Sat', 450),
     CalorieData('Sun', 500),
   ];
+
+  const CaloriesBurned({super.key});
 /*
   const CaloriesBurned({super.key});
 */
@@ -26,7 +28,10 @@ class CaloriesBurned extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'Calories Burned',
-          style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.bold, color: Colors.white),
+          style: TextStyle(
+              fontFamily: 'Roboto',
+              fontWeight: FontWeight.bold,
+              color: Colors.white),
         ),
         backgroundColor: Colors.deepPurple,
       ),
