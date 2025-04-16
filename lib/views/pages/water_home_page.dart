@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:fitness_app_capstone/views/pages/history_water_page.dart';
 import 'package:fitness_app_capstone/views/widgets/enter_amount_dialog.dart';
 import 'package:flutter/material.dart';
@@ -311,8 +312,7 @@ class _WaterHomePageState extends State<WaterHomePage>
                                       width: 2,
                                     ),
                                   ),
-                                  padding:
-                                      WidgetStateProperty.all<EdgeInsets>(
+                                  padding: WidgetStateProperty.all<EdgeInsets>(
                                     const EdgeInsets.symmetric(
                                       vertical: 22.0,
                                       horizontal: 25.0,
@@ -340,8 +340,7 @@ class _WaterHomePageState extends State<WaterHomePage>
                                   );
                                 },
                                 style: ButtonStyle(
-                                  shape:
-                                      WidgetStateProperty.all<CircleBorder>(
+                                  shape: WidgetStateProperty.all<CircleBorder>(
                                     CircleBorder(
                                       side: const BorderSide(
                                         color:
@@ -350,8 +349,7 @@ class _WaterHomePageState extends State<WaterHomePage>
                                       ),
                                     ),
                                   ),
-                                  padding:
-                                      WidgetStateProperty.all<EdgeInsets>(
+                                  padding: WidgetStateProperty.all<EdgeInsets>(
                                     const EdgeInsets.all(8.0),
                                   ),
                                   backgroundColor:
