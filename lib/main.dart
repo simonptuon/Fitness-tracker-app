@@ -1,8 +1,9 @@
 import 'package:fitness_app_capstone/views/pages/Login.dart';
 import 'package:fitness_app_capstone/views/pages/ActivitiesScreen.dart';
 import 'package:fitness_app_capstone/views/pages/Water.dart';
+import 'package:fitness_app_capstone/views/pages/sleepSchedule.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart'; // Import Google Fonts
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,10 +17,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        textTheme:
-            GoogleFonts.poppinsTextTheme(), // Apply Poppins font globally
+        textTheme: GoogleFonts.poppinsTextTheme(),
       ),
-      home: Water(),
+      home: SleepSchedule(),
       routes: {
         '/login': (context) => Login(),
         '/activities': (context) => ActivitiesScreen(),

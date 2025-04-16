@@ -289,20 +289,20 @@ class _WaterHomePageState extends State<WaterHomePage>
                                 },
                                 style: ButtonStyle(
                                   backgroundColor:
-                                      MaterialStateProperty.resolveWith<Color>(
+                                      WidgetStateProperty.resolveWith<Color>(
                                     (states) => isPressed
                                         ? Colors.white
                                         : const Color.fromARGB(
                                             255, 55, 158, 255),
                                   ),
                                   foregroundColor:
-                                      MaterialStateProperty.resolveWith<Color>(
+                                      WidgetStateProperty.resolveWith<Color>(
                                     (states) => isPressed
                                         ? const Color.fromARGB(
                                             255, 55, 158, 255)
                                         : Colors.white,
                                   ),
-                                  side: MaterialStateProperty.resolveWith<
+                                  side: WidgetStateProperty.resolveWith<
                                       BorderSide>(
                                     (states) => BorderSide(
                                       color: isPressed
@@ -312,8 +312,7 @@ class _WaterHomePageState extends State<WaterHomePage>
                                       width: 2,
                                     ),
                                   ),
-                                  padding:
-                                      MaterialStateProperty.all<EdgeInsets>(
+                                  padding: WidgetStateProperty.all<EdgeInsets>(
                                     const EdgeInsets.symmetric(
                                       vertical: 22.0,
                                       horizontal: 25.0,
@@ -341,8 +340,7 @@ class _WaterHomePageState extends State<WaterHomePage>
                                   );
                                 },
                                 style: ButtonStyle(
-                                  shape:
-                                      MaterialStateProperty.all<CircleBorder>(
+                                  shape: WidgetStateProperty.all<CircleBorder>(
                                     CircleBorder(
                                       side: const BorderSide(
                                         color:
@@ -351,12 +349,11 @@ class _WaterHomePageState extends State<WaterHomePage>
                                       ),
                                     ),
                                   ),
-                                  padding:
-                                      MaterialStateProperty.all<EdgeInsets>(
+                                  padding: WidgetStateProperty.all<EdgeInsets>(
                                     const EdgeInsets.all(8.0),
                                   ),
                                   backgroundColor:
-                                      MaterialStateProperty.all<Color>(
+                                      WidgetStateProperty.all<Color>(
                                           Colors.white),
                                 ),
                                 child: SizedBox(
