@@ -1,7 +1,8 @@
-import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitness_app_capstone/pages/ActivitiesScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'Signup.dart';
+import 'home.dart';
 
 const Color backgroundColor = Color(0xFF7D8DE2);
 const Color backgroundColor2 = Color(0xFF00A1FF);
@@ -29,26 +30,29 @@ class _LoginPageState extends State<LoginPage> {
       isLoading = true;
     });
 
-    final response = await http.post(
-      Uri.parse('http://10.0.2.2/fitness_app/login.php'),
-      body: {
-        'email': emailController.text.trim(),
-        'password': passwordController.text.trim(),
-      },
-    );
+    try {
+      final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
 
-    final data = json.decode(response.body);
+      if (userCredential.user != null) {
+        print('Login successful! Redirecting...');
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const ActivitiesScreen()),
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      print('Firebase login error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.message ?? 'Login failed')),
+      );
+    }
+
     setState(() {
       isLoading = false;
     });
-
-    if (data['status'] == 'success') {
-      Navigator.pushReplacementNamed(context, '/activities');
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(data['message'])),
-      );
-    }
   }
 
   @override

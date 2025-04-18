@@ -93,6 +93,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 onPressed: () async {
                   if (formKey.currentState!.validate()) {
                     await createUserWithEmailAndPassword();
+                    Navigator.pushReplacement(context, LoginPage.route());
                   }
                 },
                 child: const Text(
