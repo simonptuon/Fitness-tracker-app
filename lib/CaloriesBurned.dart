@@ -1,22 +1,51 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:fitness_app_capstone/pages/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'SignUpPage.dart';
 
 class CalorieData {
   CalorieData(this.date, this.calories);
   final String date;
   final double calories;
 }
+Future<List<CalorieData>> loadCalorieData() async {
+  try {
+    final file = File('calorie_data.json');
+    if (!await file.exists()) {
+      await file.create();
+      await file.writeAsString(jsonEncode([])); // Write an empty list as initial content
+    }
 
-class CaloriesBurned extends StatelessWidget {
-  final List<CalorieData> calorieData = [
-    CalorieData('Mon', 200),
-    CalorieData('Tue', 300),
-    CalorieData('Wed', 250),
-    CalorieData('Thu', 400),
-    CalorieData('Fri', 350),
-    CalorieData('Sat', 450),
-    CalorieData('Sun', 500),
-  ];
+    final String response = await file.readAsString();
+    final data = await json.decode(response);
+    List<CalorieData> calorieData = [];
+
+    for (var entry in data) {
+      calorieData.add(CalorieData(entry['date'], entry['calories'].toDouble()));
+    }
+    return calorieData;
+  } catch (e) {
+    print('Error loading calorie data: $e');
+    return []; // Return an empty list in case of an error
+  }
+}
+
+class CaloriesBurned extends StatefulWidget {
+  @override
+  _CaloriesBurnedState createState() => _CaloriesBurnedState();
+}
+
+class _CaloriesBurnedState extends State<CaloriesBurned> {
+  List<CalorieData> calorieData = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
 /*
   const CaloriesBurned({super.key});
 */
@@ -29,6 +58,16 @@ class CaloriesBurned extends StatelessWidget {
           style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.bold, color: Colors.white),
         ),
         backgroundColor: Colors.deepPurple,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.home, color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pop(
+              context,
+            );
+          },
+        ),
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -48,18 +87,13 @@ class CaloriesBurned extends StatelessWidget {
                 child: SfCartesianChart(
                   primaryXAxis: CategoryAxis(),
                   title: ChartTitle(text: 'Weekly Calories Burned'),
-                  // series: <ChartSeries>[
-                  //   ColumnSeries<CalorieData, String>(
-                  //     dataSource: calorieData,
-                  //     xValueMapper: (CalorieData data, _) => data.date,
-                  //     yValueMapper: (CalorieData data, _) => data.calories,
-                  //     color: Colors.yellowAccent,
-                  //     borderRadius: BorderRadius.only(
-                  //       topLeft: Radius.circular(10),
-                  //       topRight: Radius.circular(10),
-                  //     ),
-                  //   )
-                  // ],
+                  series: <ColumnSeries<CalorieData, String>>[
+                    ColumnSeries<CalorieData, String>(
+                      dataSource: calorieData,
+                      xValueMapper: (CalorieData data, _) => data.date,
+                      yValueMapper: (CalorieData data, _) => data.calories,
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -67,5 +101,11 @@ class CaloriesBurned extends StatelessWidget {
         ),
       ),
     );
+  }
+  void _loadData() async {
+    List<CalorieData> data = await loadCalorieData();
+    setState(() {
+      calorieData = data;
+    });
   }
 }
