@@ -22,45 +22,49 @@ dependencies:
   shared_preferences: ^2.0.15
   pedometer: ^4.1.0
   permission_handler: ^11.0.0
-
-
   collection: any
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "images/AppIcon.png"
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.14.3
 
 flutter:
   uses-material-design: true
 
   assets:
-    - assets/img.png
-    - assets/cup.png
-    - images/Exercise Background Image.webp
-    - images/Bench Press.webp
-    - images/Push-ups.webp
-    - images/Squats.webp
-    - images/Jumping Jacks.webp
-    - images/Running.webp
-    - images/Cycling Cardio.webp
-    - images/Light Jogging.webp
-    - images/Running Cardio.webp
-    - images/HIIT.webp
-    - images/Yoga.webp
-    - images/Dips.webp
-    - images/Burpees.webp
-    - images/Bicep Curls.webp
-    - images/Lunges.webp
-    - images/Walking.webp
-    - images/Basic Yoga.webp
-    - images/Deadlifts.webp
-    - images/Cycling.webp
-    - images/Crunches.webp
-    - images/Leg Raises.webp
-    - images/Plank.webp
-    - images/Mountain Climbers.webp
-    - images/Pull-ups.webp
-    - images/Pistol Squats.webp
-    - images/Pilates.webp
-    - images/Bodyweight Circuit.webp
-    - images/Swimming.webp
+    - images/Exercise Background Image.png
+    - images/Bench Press.png
+    - images/Push-ups.png
+    - images/Squats.png
+    - images/Jumping Jacks.png
+    - images/Running.png
+    - images/Cycling Cardio.png
+    - images/Light Jogging.png
+    - images/Running Cardio.png
+    - images/HIIT.png
+    - images/Yoga.png
+    - images/Dips.png
+    - images/Burpees.png
+    - images/Bicep Curls.png
+    - images/Lunges.png
+    - images/Walking.png
+    - images/Basic Yoga.png
+    - images/Deadlifts.png
+    - images/Cycling.png
+    - images/Crunches.png
+    - images/Leg Raises.png
+    - images/Plank.png
+    - images/Mountain Climbers.png
+    - images/Pull-ups.png
+    - images/Pistol Squats.png
+    - images/Pilates.png
+    - images/Bodyweight Circuit.png
+    - images/Swimming.png
+    - images/AppIcon.png
