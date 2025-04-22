@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 class WorkoutPlans extends StatefulWidget {
-  const WorkoutPlans({super.key});
-
   @override
   _WorkoutPlansState createState() => _WorkoutPlansState();
 }
@@ -298,6 +296,16 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
       appBar: AppBar(
         title: Text('Workout Plans', style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.bold, color: Colors.white)),
         backgroundColor: Colors.deepPurple,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.home, color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pop(
+              context,
+            );
+          },
+        ),
       ),
       body: Stack(
           children: [
@@ -367,14 +375,6 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
                     onPressed: () {
                       showExerciseDialog(option);
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepPurple,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                    ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -382,6 +382,14 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
                         SizedBox(width: 8),
                         Text(option, style: TextStyle(fontFamily: 'Roboto')),
                       ],
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.deepPurple,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                     ),
                   );
                 }).toList(),

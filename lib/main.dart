@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: CaloriesBurned(),
+      home: WorkoutPlans(),
       routes: {
         '/login': (context) => const Login(),
         '/activities': (context) => const ActivitiesScreen(),
