@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fitness_app_capstone/pages/login.dart';
 
 class SignUpPage extends StatefulWidget {
   static route() => MaterialPageRoute(
     builder: (context) => const SignUpPage(),
   );
+
   const SignUpPage({super.key});
 
   @override
@@ -31,16 +33,35 @@ class _SignUpPageState extends State<SignUpPage> {
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
+
+      if (userCredential.user != null) {
+        await createUserProfile(userCredential.user!); // 🔥 Save profile in Firestore
+        Navigator.pushReplacement(context, LoginPage.route());
+      }
     } catch (e) {
-      // Handle errors here, like showing a dialog
       print('Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Sign up failed: ${e.toString()}')),
+      );
     }
+  }
+
+  Future<void> createUserProfile(User user) async {
+    final userDoc =
+    FirebaseFirestore.instance.collection('users').doc(user.uid);
+
+    await userDoc.set({
+      'email': user.email,
+      'caloriesBurned': 0,
+      'waterConsumed': 0,
+      'heartRate': 0,
+      'createdAt': Timestamp.now(),
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Colors.deepPurple,
       body: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Form(
@@ -53,7 +74,6 @@ class _SignUpPageState extends State<SignUpPage> {
                 style: TextStyle(
                   fontSize: 50,
                   fontWeight: FontWeight.bold,
-                  // color: Colors.white,
                   color: Colors.black,
                 ),
               ),
@@ -93,7 +113,6 @@ class _SignUpPageState extends State<SignUpPage> {
                 onPressed: () async {
                   if (formKey.currentState!.validate()) {
                     await createUserWithEmailAndPassword();
-                    Navigator.pushReplacement(context, LoginPage.route());
                   }
                 },
                 child: const Text(
@@ -101,7 +120,6 @@ class _SignUpPageState extends State<SignUpPage> {
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.white,
-                    // color: Colors.black,
                   ),
                 ),
               ),
@@ -117,8 +135,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     children: [
                       TextSpan(
                         text: 'Sign In',
-                        style:
-                        Theme.of(context).textTheme.titleMedium?.copyWith(
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
