@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness_app_capstone/pages/ActivitiesScreen.dart';
 import 'package:flutter/material.dart';
 import 'Signup.dart';
-import 'home.dart';
 
 const Color backgroundColor = Color(0xFF7D8DE2);
 const Color backgroundColor2 = Color(0xFF00A1FF);

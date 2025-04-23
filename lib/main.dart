@@ -7,10 +7,8 @@ import 'package:fitness_app_capstone/pie_chart.dart';
 import 'package:fitness_app_capstone/pages/signup.dart';
 import 'package:fitness_app_capstone/pages/loginui.dart';
 import 'package:fitness_app_capstone/pages/ActivitiesScreen.dart';
+import 'package:fitness_app_capstone/pages/sleepSchedule.dart';
 import 'package:fitness_app_capstone/pages/Water.dart';
-import 'WorkoutPlans.dart';
-
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,7 +56,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const SignUpPage(),
+      home: const SleepSchedule(),
       routes: {
         '/login': (context) => const Login(),
         '/activities': (context) => const ActivitiesScreen(),

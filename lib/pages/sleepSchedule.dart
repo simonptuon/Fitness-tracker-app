@@ -86,16 +86,18 @@ class SleepSchedule extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                      child: SleepCard(
-                          title: "Bed time",
-                          duration: "7H and 28Min",
-                          icon: Icons.bed)),
+                    child: SleepCard(
+                        title: "Bed time",
+                        duration: "7H and 28Min",
+                        icon: Icons.bed),
+                  ),
                   SizedBox(width: 16),
                   Expanded(
-                      child: SleepCard(
-                          title: "Alarm",
-                          duration: "16H and 18Min",
-                          icon: Icons.alarm)),
+                    child: SleepCard(
+                        title: "Alarm",
+                        duration: "16H and 18Min",
+                        icon: Icons.alarm),
+                  ),
                 ],
               ),
               SizedBox(height: 30),
@@ -161,7 +163,11 @@ class SleepCard extends StatelessWidget {
   final String duration;
   final IconData icon;
 
-  SleepCard({required this.title, required this.duration, required this.icon});
+  const SleepCard(
+      {super.key,
+      required this.title,
+      required this.duration,
+      required this.icon});
 
   @override
   Widget build(BuildContext context) {

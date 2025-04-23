@@ -34,6 +34,8 @@ Future<List<CalorieData>> loadCalorieData() async {
 }
 
 class CaloriesBurned extends StatefulWidget {
+  const CaloriesBurned({super.key});
+
   @override
   _CaloriesBurnedState createState() => _CaloriesBurnedState();
 }

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:fitness_app_capstone/pages/history_water_page.dart';
 import 'package:fitness_app_capstone/pages/widgets/enter_amount_dialog.dart';
 import 'package:flutter/material.dart';
