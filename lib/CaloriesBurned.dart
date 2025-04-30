@@ -4,27 +4,48 @@ import 'dart:io';
 import 'package:fitness_app_capstone/pages/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'SignUpPage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class CalorieData {
   CalorieData(this.date, this.calories);
   final String date;
   final double calories;
 }
+// Future<List<CalorieData>> loadCalorieData() async {
+//   try {
+//     final file = File('calorie_data.json');
+//     if (!await file.exists()) {
+//       await file.create();
+//       await file.writeAsString(jsonEncode([])); // Write an empty list as initial content
+//     }
+//
+//     final String response = await file.readAsString();
+//     final data = await json.decode(response);
+//     List<CalorieData> calorieData = [];
+//
+//     for (var entry in data) {
+//       calorieData.add(CalorieData(entry['date'], entry['calories'].toDouble()));
+//     }
+//     return calorieData;
+//   } catch (e) {
+//     print('Error loading calorie data: $e');
+//     return []; // Return an empty list in case of an error
+//   }
+// }
+
 Future<List<CalorieData>> loadCalorieData() async {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user == null) {
+    return []; // Return an empty list if no user is logged in
+  }
+
   try {
-    final file = File('calorie_data.json');
-    if (!await file.exists()) {
-      await file.create();
-      await file.writeAsString(jsonEncode([])); // Write an empty list as initial content
-    }
-
-    final String response = await file.readAsString();
-    final data = await json.decode(response);
     List<CalorieData> calorieData = [];
-
-    for (var entry in data) {
-      calorieData.add(CalorieData(entry['date'], entry['calories'].toDouble()));
+    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('calorieData').doc(user.uid).collection('weeklyData').get();
+    for (var doc in snapshot.docs) {
+      calorieData.add(CalorieData(doc['date'], doc['calories'].toDouble()));
     }
     return calorieData;
   } catch (e) {
