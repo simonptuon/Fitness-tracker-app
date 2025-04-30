@@ -9,11 +9,15 @@ import 'package:fitness_app_capstone/pages/loginui.dart';
 import 'package:fitness_app_capstone/pages/ActivitiesScreen.dart';
 import 'package:fitness_app_capstone/pages/sleepSchedule.dart';
 import 'package:fitness_app_capstone/pages/Water.dart';
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase before the app starts
+  // Initialize the Android alarm manager:
+  await AndroidAlarmManager.initialize();
+
+  // Then initialize Firebase:
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -56,7 +60,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const SleepSchedule(),
+      home: const ActivitiesScreen(),
       routes: {
         '/login': (context) => const Login(),
         '/activities': (context) => const ActivitiesScreen(),
