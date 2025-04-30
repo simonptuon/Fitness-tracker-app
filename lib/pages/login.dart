@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness_app_capstone/pages/ActivitiesScreen.dart';
+import 'package:fitness_app_capstone/pages/pedometer.dart';
 import 'package:flutter/material.dart';
 import 'Signup.dart';
 import 'home.dart';
@@ -40,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
         print('Login successful! Redirecting...');
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const ActivitiesScreen()),
+          MaterialPageRoute(builder: (context) => const PedometerPage()),
         );
       }
     } on FirebaseAuthException catch (e) {

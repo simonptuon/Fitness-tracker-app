@@ -17,16 +17,27 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+  final fullNameController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
+    confirmPasswordController.dispose();
+    fullNameController.dispose();
     super.dispose();
   }
 
   Future<void> createUserWithEmailAndPassword() async {
+    if (passwordController.text.trim() != confirmPasswordController.text.trim()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Passwords do not match')),
+      );
+      return;
+    }
+
     try {
       final userCredential =
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -35,7 +46,7 @@ class _SignUpPageState extends State<SignUpPage> {
       );
 
       if (userCredential.user != null) {
-        await createUserProfile(userCredential.user!); // 🔥 Save profile in Firestore
+        await createUserProfile(userCredential.user!);
         Navigator.pushReplacement(context, LoginPage.route());
       }
     } catch (e) {
@@ -52,9 +63,11 @@ class _SignUpPageState extends State<SignUpPage> {
 
     await userDoc.set({
       'email': user.email,
+      'fullName': fullNameController.text.trim(),
       'caloriesBurned': 0,
       'waterConsumed': 0,
       'heartRate': 0,
+      'stepCount': 0,
       'createdAt': Timestamp.now(),
     });
   }
@@ -78,7 +91,19 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
               ),
               const SizedBox(height: 10),
-              const SizedBox(height: 20),
+              TextFormField(
+                controller: fullNameController,
+                decoration: const InputDecoration(
+                  hintText: 'Full Name',
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your full name';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 15),
               TextFormField(
                 controller: emailController,
                 decoration: const InputDecoration(
@@ -104,6 +129,23 @@ class _SignUpPageState extends State<SignUpPage> {
                   }
                   if (value.length < 6) {
                     return 'Password must be at least 6 characters';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 15),
+              TextFormField(
+                controller: confirmPasswordController,
+                decoration: const InputDecoration(
+                  hintText: 'Confirm Password',
+                ),
+                obscureText: true,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please confirm your password';
+                  }
+                  if (value != passwordController.text) {
+                    return 'Passwords do not match';
                   }
                   return null;
                 },
@@ -135,7 +177,8 @@ class _SignUpPageState extends State<SignUpPage> {
                     children: [
                       TextSpan(
                         text: 'Sign In',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        style:
+                        Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
