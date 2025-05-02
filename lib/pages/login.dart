@@ -41,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
         print('Login successful! Redirecting...');
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const PedometerPage()),
+          MaterialPageRoute(builder: (context) => const ActivitiesScreen()),
         );
       }
     } on FirebaseAuthException catch (e) {

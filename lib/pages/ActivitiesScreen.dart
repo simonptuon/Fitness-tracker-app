@@ -1,5 +1,7 @@
+import 'package:fitness_app_capstone/WorkoutPlans.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import '/pages/pedometer.dart';
 
 class ActivitiesScreen extends StatefulWidget {
   const ActivitiesScreen({super.key});
@@ -26,6 +28,63 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [backgroundColor, backgroundColor2],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+              child: const Text(
+                'My Activities',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            ListTile(
+              title: const Text('Water Consumed'),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => WorkoutPlans()));
+              },
+            ),
+            ListTile(
+              title: const Text('Calories Burned'),
+              onTap: () {
+                Navigator.pushNamed(context, '/calories');
+              },
+            ),
+            ListTile(
+              title: const Text('Exercises'),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => WorkoutPlans()));
+              },
+            ),
+            ListTile(
+              title: const Text('Steps Taken'),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => PedometerPage()));
+              },
+            ),
+            ListTile(
+              title: const Text('Sleep Schedule'),
+              onTap: () {
+                Navigator.pushNamed(context, '/sleep');
+              },
+            ),
+          ],
+        ),
+      ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
