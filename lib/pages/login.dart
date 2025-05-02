@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitness_app_capstone/pages/ActivitiesScreen.dart';
 import 'package:fitness_app_capstone/pages/activitiesScreen.dart';
 import 'package:flutter/material.dart';
 import 'Signup.dart';
@@ -40,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
         print('Login successful! Redirecting...');
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const Activitiesscreen()),
+          MaterialPageRoute(builder: (context) => const ActivitiesScreen()),
         );
       }
     } on FirebaseAuthException catch (e) {
