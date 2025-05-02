@@ -1,12 +1,8 @@
+import 'package:alarm/model/volume_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
-
-@pragma('vm:entry-point')
-void alarmCallback() {
-  print('🔔 Alarm fired at ${DateTime.now()}');
-}
+import 'package:alarm/alarm.dart';
 
 class SleepSchedule extends StatefulWidget {
   const SleepSchedule({super.key});
@@ -20,15 +16,9 @@ class _SleepScheduleState extends State<SleepSchedule> {
   TimeOfDay bedtime = const TimeOfDay(hour: 22, minute: 0);
   TimeOfDay alarmTime = const TimeOfDay(hour: 6, minute: 30);
 
-  @override
-  void initState() {
-    super.initState();
-    AndroidAlarmManager.initialize();
-  }
-
   List<DateTime> getWeekDates() {
     final now = DateTime.now();
-    return List.generate(14, (index) => now.add(Duration(days: index - 3)));
+    return List.generate(14, (i) => now.add(Duration(days: i - 3)));
   }
 
   String getSleepDuration() {
@@ -40,20 +30,50 @@ class _SleepScheduleState extends State<SleepSchedule> {
     final duration = alarm.isBefore(bed)
         ? alarm.add(const Duration(days: 1)).difference(bed)
         : alarm.difference(bed);
-    return "${duration.inHours}H ${duration.inMinutes.remainder(60)}Min";
+    return "\${duration.inHours}H \${duration.inMinutes.remainder(60)}Min";
   }
 
   String getGreeting() {
     final hour = DateTime.now().hour;
-    if (hour >= 5 && hour < 12) {
-      return "Good morning 🌞";
-    } else if (hour >= 12 && hour < 18) {
-      return "Good afternoon ☀️";
-    } else if (hour >= 18 && hour < 22) {
-      return "Good evening 🌙";
-    } else {
-      return "Good night 🌌";
+    if (hour >= 5 && hour < 12) return "Good morning 🌞";
+    if (hour >= 12 && hour < 18) return "Good afternoon ☀️";
+    if (hour >= 18 && hour < 22) return "Good evening 🌙";
+    return "Good night 🌌";
+  }
+
+  Future<void> _scheduleAlarm(TimeOfDay newTime) async {
+    final now = DateTime.now();
+    var scheduled =
+        DateTime(now.year, now.month, now.day, newTime.hour, newTime.minute);
+    if (scheduled.isBefore(now)) {
+      scheduled = scheduled.add(const Duration(days: 1));
     }
+
+    final settings = AlarmSettings(
+      id: 0,
+      dateTime: scheduled,
+      assetAudioPath: 'assets/alarm.mp3',
+      loopAudio: true,
+      vibrate: true,
+      warningNotificationOnKill: false,
+      androidFullScreenIntent: true,
+      volumeSettings: VolumeSettings.fade(
+        volume: 1.0,
+        fadeDuration: Duration(seconds: 1),
+        volumeEnforced: true,
+      ),
+      notificationSettings: const NotificationSettings(
+        title: 'Alarm',
+        body: 'Time to wake up!',
+        stopButton: 'Stop Alarm',
+      ),
+    );
+
+    await Alarm.set(alarmSettings: settings);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+          content: Text('Alarm set for \${DateFormat.jm().format(scheduled)}')),
+    );
   }
 
   @override
@@ -69,11 +89,9 @@ class _SleepScheduleState extends State<SleepSchedule> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text("Welcome back!", style: TextStyle(color: Colors.grey)),
-              Text(
-                getGreeting(),
-                style:
-                    const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
-              ),
+              Text(getGreeting(),
+                  style: const TextStyle(
+                      fontSize: 26, fontWeight: FontWeight.bold)),
               const SizedBox(height: 20),
               Container(
                 padding: const EdgeInsets.all(16),
@@ -84,10 +102,8 @@ class _SleepScheduleState extends State<SleepSchedule> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: Text(
-                        "Planned sleep: ${getSleepDuration()}",
-                        style: const TextStyle(color: Colors.white),
-                      ),
+                      child: Text("Planned sleep: \${getSleepDuration()}",
+                          style: const TextStyle(color: Colors.white)),
                     ),
                     const Icon(Icons.nightlight_round, color: Colors.white),
                   ],
@@ -113,12 +129,11 @@ class _SleepScheduleState extends State<SleepSchedule> {
                         margin: const EdgeInsets.symmetric(horizontal: 8),
                         child: Column(
                           children: [
-                            Text(
-                              DateFormat('E').format(date),
-                              style: TextStyle(
-                                  color:
-                                      isSelected ? Colors.black : Colors.grey),
-                            ),
+                            Text(DateFormat('E').format(date),
+                                style: TextStyle(
+                                    color: isSelected
+                                        ? Colors.black
+                                        : Colors.grey)),
                             const SizedBox(height: 4),
                             Container(
                               padding: const EdgeInsets.all(8),
@@ -128,13 +143,11 @@ class _SleepScheduleState extends State<SleepSchedule> {
                                     : Colors.transparent,
                                 shape: BoxShape.circle,
                               ),
-                              child: Text(
-                                DateFormat('d').format(date),
-                                style: TextStyle(
-                                    color: isSelected
-                                        ? Colors.white
-                                        : Colors.black),
-                              ),
+                              child: Text(DateFormat('d').format(date),
+                                  style: TextStyle(
+                                      color: isSelected
+                                          ? Colors.white
+                                          : Colors.black)),
                             ),
                           ],
                         ),
@@ -163,16 +176,7 @@ class _SleepScheduleState extends State<SleepSchedule> {
                       time: alarmTime,
                       onTimeChanged: (newTime) {
                         setState(() => alarmTime = newTime);
-                        // For immediate test: schedule 10 seconds from now
-                        final when =
-                            DateTime.now().add(const Duration(seconds: 10));
-                        AndroidAlarmManager.oneShotAt(
-                          when,
-                          0,
-                          alarmCallback,
-                          exact: true,
-                          wakeup: true,
-                        );
+                        _scheduleAlarm(newTime);
                       },
                     ),
                   ),
@@ -201,10 +205,9 @@ class _SleepScheduleState extends State<SleepSchedule> {
                             onPressed: () async {
                               final Uri url =
                                   Uri.parse('https://www.sleepfoundation.org/');
-                              if (await canLaunchUrl(url)) {
+                              if (await canLaunchUrl(url))
                                 await launchUrl(url,
                                     mode: LaunchMode.externalApplication);
-                              }
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFD1CCF7),
@@ -219,9 +222,8 @@ class _SleepScheduleState extends State<SleepSchedule> {
                     ),
                     const SizedBox(width: 10),
                     const CircleAvatar(
-                      radius: 35,
-                      backgroundImage: AssetImage("assets/yawning_baby.jpg"),
-                    ),
+                        radius: 35,
+                        backgroundImage: AssetImage("assets/yawning_baby.jpg")),
                   ],
                 ),
               ),
@@ -249,9 +251,7 @@ class SleepCard extends StatelessWidget {
 
   Future<void> _pickTime(BuildContext context) async {
     final picked = await showTimePicker(context: context, initialTime: time);
-    if (picked != null && picked != time) {
-      onTimeChanged(picked);
-    }
+    if (picked != null && picked != time) onTimeChanged(picked);
   }
 
   @override
@@ -262,18 +262,15 @@ class SleepCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: const Color(0xFFF5F4FF),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Column(
-          children: [
-            Icon(icon, color: Colors.purple),
-            const SizedBox(height: 8),
-            Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-            const SizedBox(height: 4),
-            Text(formattedTime),
-          ],
-        ),
+            color: const Color(0xFFF5F4FF),
+            borderRadius: BorderRadius.circular(20)),
+        child: Column(children: [
+          Icon(icon, color: Colors.purple),
+          const SizedBox(height: 8),
+          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 4),
+          Text(formattedTime)
+        ]),
       ),
     );
   }

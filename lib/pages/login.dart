@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fitness_app_capstone/pages/ActivitiesScreen.dart';
+import 'package:fitness_app_capstone/pages/activitiesScreen.dart';
 import 'package:flutter/material.dart';
 import 'Signup.dart';
 
@@ -30,7 +30,8 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     try {
-      final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      final userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
@@ -39,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
         print('Login successful! Redirecting...');
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const ActivitiesScreen()),
+          MaterialPageRoute(builder: (context) => const Activitiesscreen()),
         );
       }
     } on FirebaseAuthException catch (e) {
@@ -112,9 +113,9 @@ class _LoginPageState extends State<LoginPage> {
               isLoading
                   ? const CircularProgressIndicator()
                   : ElevatedButton(
-                onPressed: loginUser,
-                child: const Text("Login"),
-              ),
+                      onPressed: loginUser,
+                      child: const Text("Login"),
+                    ),
               const SizedBox(height: 20),
               GestureDetector(
                 onTap: () {
@@ -124,15 +125,17 @@ class _LoginPageState extends State<LoginPage> {
                   text: TextSpan(
                     text: "Don't have an account? ",
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Colors.white,
-                    ),
+                          color: Colors.white,
+                        ),
                     children: [
                       TextSpan(
                         text: 'Sign Up',
                         style: Theme.of(context)
                             .textTheme
                             .titleMedium
-                            ?.copyWith(fontWeight: FontWeight.bold, color: Colors.yellow),
+                            ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.yellow),
                       ),
                     ],
                   ),

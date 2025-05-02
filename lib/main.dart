@@ -6,16 +6,15 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:fitness_app_capstone/pie_chart.dart';
 import 'package:fitness_app_capstone/pages/signup.dart';
 import 'package:fitness_app_capstone/pages/loginui.dart';
-import 'package:fitness_app_capstone/pages/ActivitiesScreen.dart';
+import 'package:fitness_app_capstone/pages/activitiesScreen.dart';
 import 'package:fitness_app_capstone/pages/sleepSchedule.dart';
-import 'package:fitness_app_capstone/pages/Water.dart';
-import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+import 'package:fitness_app_capstone/pages/water.dart';
+import 'package:alarm/alarm.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize the Android alarm manager:
-  await AndroidAlarmManager.initialize();
+  await Alarm.init();
 
   // Then initialize Firebase:
   await Firebase.initializeApp(
@@ -60,10 +59,10 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const ActivitiesScreen(),
+      home: const SignUpPage(),
       routes: {
         '/login': (context) => const Login(),
-        '/activities': (context) => const ActivitiesScreen(),
+        '/activities': (context) => const Activitiesscreen(),
         '/consumption': (context) => const Water(),
       },
     );
