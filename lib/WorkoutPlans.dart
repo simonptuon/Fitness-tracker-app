@@ -1,3 +1,4 @@
+import 'package:fitness_app_capstone/pages/ActivitiesScreen.dart';
 import 'package:flutter/material.dart';
 
 class WorkoutPlans extends StatefulWidget {
@@ -301,8 +302,9 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
             Icons.home, color: Colors.white,
           ),
           onPressed: () {
-            Navigator.pop(
+            Navigator.pushReplacement(
               context,
+              MaterialPageRoute(builder: (context) => ActivitiesScreen()),
             );
           },
         ),
@@ -312,7 +314,7 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
             Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('images/Exercise Background Image.webp'),
+                  image: AssetImage('images/Exercise Background Image.png'),
                   fit: BoxFit.cover,
                 ),
                 gradient: LinearGradient(

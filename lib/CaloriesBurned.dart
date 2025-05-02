@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:fitness_app_capstone/pages/ActivitiesScreen.dart';
+import 'package:fitness_app_capstone/pages/home.dart';
 import 'package:fitness_app_capstone/pages/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -84,8 +86,9 @@ class _CaloriesBurnedState extends State<CaloriesBurned> {
             Icons.home, color: Colors.white,
           ),
           onPressed: () {
-            Navigator.pop(
+            Navigator.pushReplacement(
               context,
+              MaterialPageRoute(builder: (context) => ActivitiesScreen()),
             );
           },
         ),

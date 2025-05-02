@@ -1,4 +1,6 @@
 import 'package:fitness_app_capstone/CaloriesBurned.dart';
+import 'package:fitness_app_capstone/pages/login.dart';
+import 'package:fitness_app_capstone/pages/pedometer.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';

@@ -24,6 +24,7 @@ dependencies:
   permission_handler: ^12.0.0+1
   cloud_firestore: ^5.0.0
   collection: any
+  flutter_launcher_icons: ^0.14.3
 
 flutter_launcher_icons:
   android: "launcher_icon"
