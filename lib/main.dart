@@ -1,3 +1,4 @@
+import 'package:fitness_app_capstone/pages/login.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -59,9 +60,9 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const SignUpPage(),
+      home: const ActivitiesScreen(),
       routes: {
-        '/login': (context) => const Login(),
+        '/login': (context) => const LoginPage(),
         '/activities': (context) => const ActivitiesScreen(),
         '/consumption': (context) => const Water(),
       },

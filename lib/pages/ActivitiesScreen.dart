@@ -1,218 +1,263 @@
 import 'package:flutter/material.dart';
-import 'package:percent_indicator/percent_indicator.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
-class ActivitiesScreen extends StatefulWidget {
+class ActivitiesScreen extends StatelessWidget {
   const ActivitiesScreen({super.key});
 
   @override
-  _ActivitiesScreenState createState() => _ActivitiesScreenState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Activty Page',
+      theme: ThemeData(
+        scaffoldBackgroundColor: const Color(0xFF007D8C),
+        primaryColor: const Color(0xFF00C9A7),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFF00C9A7),
+          elevation: 0,
+        ),
+        textTheme: const TextTheme(
+          bodyMedium: TextStyle(color: Color(0xFF333333)),
+          titleLarge: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF333333),
+          ),
+        ),
+      ),
+      home: const Dashboard(),
+    );
+  }
 }
 
-const Color backgroundColor = Color(0xFF1c2e65);
-const Color backgroundColor2 = Color(0xFF4e6cbb);
-const Color testColor = Color(0xFF3D78EA);
-const Color testColor2 = Color(0xFF1D66AA);
-const Color backgroundColorCard = Color(0xFF483867);
-const Color backgroundColorCard2 = Color(0xFF3D78EA);
+class Dashboard extends StatelessWidget {
+  const Dashboard({super.key});
 
-const Color textColor = Color(0xFF0C0C0C);
-const Color textColor2 = Color(0xFFF9F6EE);
-const Color iconColor = Color(0xFF583867);
+  Future<Map<String, dynamic>> fetchData() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null)
+      return {
+        'stepCount': 0,
+        'caloriesBurned': 0,
+        'heartRate': 0,
+        'waterConsumed': 0,
+      };
 
-class _ActivitiesScreenState extends State<ActivitiesScreen> {
-  String selectedFilter = 'Daily';
-  final List<String> filters = ['Daily', 'Weekly', 'Monthly', 'Yearly'];
+    final doc =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    return doc.data() ??
+        {
+          'stepCount': 0,
+          'caloriesBurned': 0,
+          'heartRate': 0,
+          'fullName': "",
+          'waterConsumed': 0,
+        };
+  }
 
   @override
   Widget build(BuildContext context) {
+    const stepGoal = 10000;
+    const calorieGoal = 3500;
+
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomLeft,
-            colors: [backgroundColor, backgroundColor2],
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              AppBar(
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                title:
-                    Text('Activities', style: TextStyle(color: Colors.black)),
-                titleTextStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Poppins',
+      body: SafeArea(
+        child: FutureBuilder<Map<String, dynamic>>(
+          future: fetchData(),
+          builder: (context, snap) {
+            if (!snap.hasData) {
+              return const Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation(Color(0xFFA2E4DC)),
                 ),
-                actions: [
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(
-                      '',
-                    ),
-                  ),
-                  SizedBox(width: 16),
-                ],
-              ),
-              TextField(
-                decoration: InputDecoration(
-                  hintText: 'Search',
-                  hintStyle: TextStyle(color: Colors.grey, fontSize: 16),
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: Colors.grey,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
-                ),
-              ),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: filters.map((filter) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                    child: TextButton(
-                      onPressed: () {
-                        setState(() {
-                          selectedFilter = filter;
-                        });
-                      },
-                      style: TextButton.styleFrom(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                        backgroundColor: Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                          side: BorderSide(
-                            color: Colors.transparent,
-                          ),
-                        ),
-                      ),
-                      child: Ink(
-                        decoration: BoxDecoration(
-                          gradient: selectedFilter == filter
-                              ? LinearGradient(
-                                  colors: [testColor2, testColor],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                )
-                              : null,
-                          borderRadius: BorderRadius.circular(18),
-                        ),
-                        child: Container(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 8, vertical: 9),
-                          child: Text(
-                            filter,
-                            style: TextStyle(
-                                color: textColor,
-                                fontWeight: selectedFilter == filter
-                                    ? FontWeight.bold
-                                    : FontWeight.w500,
-                                fontSize: 16),
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-              SizedBox(height: 10),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
+              );
+            }
+            final data = snap.data!;
+            final steps = data['stepCount'] as int;
+            final calories = data['caloriesBurned'] as int;
+            final hr = data['heartRate'] as int;
+            final stepPct = (steps / stepGoal).clamp(0.0, 1.0);
+            final calPct = (calories / calorieGoal).clamp(0.0, 1.0);
+            final hrPct = (hr / 150).clamp(0.0, 1.0);
+            final fullName = (data['fullName'] as String?) ?? '';
+            final waterConsumed = (data['waterConsumed'] as num).toDouble();
+
+            return SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      GridView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: 4,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio:
-                              1.0, // Changed to 1.0 to make the cards square
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 12,
+                      Text(
+                        'Welcome back, $fullName',
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
-                        itemBuilder: (context, index) {
-                          return _buildActivityCard(
-                            icon: index == 0
-                                ? Icons.directions_walk_outlined
-                                : index == 1
-                                    ? Icons.bedtime_outlined
-                                    : index == 2
-                                        ? Icons.favorite_outline
-                                        : Icons.local_fire_department_outlined,
-                            title: index == 0
-                                ? 'Steps'
-                                : index == 1
-                                    ? 'Sleep'
-                                    : index == 2
-                                        ? 'Heart'
-                                        : 'Kcal',
-                            value: index == 0
-                                ? '5,375'
-                                : index == 1
-                                    ? '8:00'
-                                    : index == 2
-                                        ? '72'
-                                        : '375',
-                            unit: index == 0
-                                ? 'steps'
-                                : index == 1
-                                    ? 'h'
-                                    : index == 2
-                                        ? 'bpm'
-                                        : 'kcal',
-                            height: index == 0
-                                ? 240.0
-                                : index == 1
-                                    ? 150.0
-                                    : index == 2
-                                        ? 180.0
-                                        : 240.0, // Adjust these values as needed
-                            titleColor: index == 1 ? Colors.white : null,
-                            colorIcon: index == 1 ? Colors.white : null,
-                            iconColorBG: index == 1 ? Colors.white : null,
-                            circularIndicator: index == 0 || index == 3
-                                ? CircularPercentIndicator(
-                                    radius: 50.0,
-                                    lineWidth: 4.0,
-                                    percent: index == 0 ? 0.40 : 0.12,
-                                    center: Text(
-                                      index == 0 ? "42%\nSteps" : "372\nKcal",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: iconColor),
-                                    ),
-                                    progressColor: iconColor,
-                                    backgroundColor: Colors.white24,
-                                    circularStrokeCap: CircularStrokeCap.round,
-                                    animation: true,
-                                    animationDuration: 1200,
-                                  )
-                                : null,
-                            // Add CircularPercentIndicator for Steps and Heart cards
-                          );
-                        },
                       ),
-                      SizedBox(height: 0),
-                      _buildMealCard(),
-                      SizedBox(height: 5),
-                      _buildMealCard(),
+                      Container(
+                        decoration: const BoxDecoration(
+                          color: Colors.white24,
+                          shape: BoxShape.circle,
+                        ),
+                        child: IconButton(
+                          icon: const Icon(Icons.mic),
+                          color: Colors.white,
+                          onPressed: () {},
+                        ),
+                      ),
                     ],
                   ),
-                ),
+                  const SizedBox(height: 20),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFA2E4DC),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.directions_run,
+                          size: 32,
+                          color: Colors.white,
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "You're ${(stepPct * 100).toInt()}% to your step goal!",
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              const Text(
+                                'Keep it up!',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white70,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // first row: two stat cards side by side
+                      Row(
+                        children: [
+                          _StatCard(
+                            value: steps.toString(),
+                            title: 'Steps',
+                            percent: stepPct,
+                            ringColor: const Color(0xFF00C9A7),
+                            backgroundRingColor: const Color(0xFFA2E4DC),
+                            heartIcon: Icons.favorite,
+                            bottomLeftLabel: '${hr.toString()} bpm',
+                            bottomRightPlaceholder: true,
+                          ),
+                          const SizedBox(width: 16),
+                          _StatCard(
+                            value: calories.toString(),
+                            title: 'Calories',
+                            percent: calPct,
+                            ringColor: const Color(0xFF00C9A7),
+                            backgroundRingColor: const Color(0xFFF0F0F0),
+                            waterDrop: Icons.water_drop,
+                            bottomLeftLabel: '$waterConsumed L',
+                            bottomRightPlaceholder: true,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+                      // second row: one stat card + badge panel
+                      Row(
+                        children: [
+                          _StatCard(
+                            value: hr.toString(),
+                            title: 'Heart',
+                            percent: hrPct,
+                            ringColor: const Color(0xFF00C9A7),
+                            backgroundRingColor: const Color(0xFFA2E4DC),
+                            waterDrop: Icons.water_drop,
+                            bottomLeftLabel: '$waterConsumed L',
+                            bottomRightPlaceholder: true,
+                          ),
+                          const SizedBox(width: 16),
+                          Column(
+                            children: [
+                              _Badge(),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              _GoalTile([
+                                "Reach 3500 Calories",
+                                "Drink 2 L Water",
+                                "Log a Workout"
+                              ]),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.white,
+        child: const Icon(Icons.add, color: Color(0xFF00C9A7)),
+        onPressed: () {},
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 6,
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.home),
+                color: const Color(0xFF00C9A7),
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: const Icon(Icons.bar_chart),
+                color: Colors.grey,
+                onPressed: () {},
+              ),
+              const SizedBox(width: 48),
+              IconButton(
+                icon: const Icon(Icons.track_changes),
+                color: Colors.grey,
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: const Icon(Icons.person),
+                color: Colors.grey,
+                onPressed: () {},
               ),
             ],
           ),
@@ -220,124 +265,237 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
       ),
     );
   }
+}
 
-  Widget _buildActivityCard({
-    required IconData icon,
-    required String title,
-    required String value,
-    required String unit,
-    double? height,
-    Color? titleColor,
-    Color? colorIcon,
-    Color? iconColorBG,
-    Widget? circularIndicator,
-  }) {
+class _StatCard extends StatelessWidget {
+  final String title;
+  final String value;
+  final double percent;
+  final Color ringColor;
+  final Color backgroundRingColor;
+  final IconData? heartIcon;
+  final IconData? waterDrop;
+  final String bottomLeftLabel;
+  final bool bottomRightPlaceholder;
+
+  const _StatCard({
+    required this.title,
+    required this.value,
+    required this.percent,
+    required this.ringColor,
+    required this.backgroundRingColor,
+    this.waterDrop,
+    this.heartIcon,
+    required this.bottomLeftLabel,
+    this.bottomRightPlaceholder = false,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      height: height, // Set the height here
+      width: MediaQuery.of(context).size.width * 0.3,
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20.0),
-        gradient: title == 'Sleep'
-            ? LinearGradient(
-                colors: [backgroundColorCard, backgroundColorCard2],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              )
-            : null,
-        color: title == 'Sleep' ? null : Colors.white,
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment:
-                  MainAxisAlignment.spaceBetween, // Distribute space
-              children: [
-                Text(title,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30,
-                        color: title == 'Sleep'
-                            ? Colors.white
-                            : titleColor)), // Title on the left
-                Container(
-                  // Icon on the right
-                  decoration: BoxDecoration(
-                    color: title == 'Sleep' ? Colors.white : iconColor,
-                    borderRadius: BorderRadius.circular(50.0),
-                  ),
-                  padding: EdgeInsets.all(8.0),
-                  child: Icon(icon,
-                      size: 32,
-                      color: title == 'Sleep' ? Colors.black : Colors.white),
-                ),
-              ],
-            ),
-            SizedBox(height: 8),
-            if (circularIndicator != null) ...[
-              Expanded(
-                child: circularIndicator,
-              ),
-              SizedBox(height: 8),
-            ] else ...[
-              Row(
+      child: Column(
+        children: [
+          CircularPercentIndicator(
+            radius: 60,
+            lineWidth: 10,
+            percent: percent,
+            center: RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
                 children: [
-                  Text(value,
-                      style: TextStyle(
-                          fontSize: 25,
-                          color: title == 'Sleep' ? Colors.white : colorIcon)),
-                  SizedBox(width: 4),
-                  Text(unit,
-                      style: TextStyle(
-                          color: title == 'Sleep' ? Colors.white : null)),
+                  TextSpan(
+                    text: '$title\n',
+                    style: const TextStyle(
+                      color: Color(0xFF333333),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                    ),
+                  ),
+                  TextSpan(
+                    text: '$value\n',
+                    style: const TextStyle(
+                      color: Color(0xFF333333),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 28,
+                    ),
+                  ),
+                  TextSpan(
+                    text: '${(percent * 100).toInt()}%',
+                    style: const TextStyle(
+                      color: Color(0xFF00C9A7),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
+                  ),
                 ],
               ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMealCard() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20.0),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              spreadRadius: 2,
-              blurRadius: 5,
-              offset: Offset(0, 3),
             ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            progressColor: ringColor,
+            backgroundColor: backgroundRingColor,
+            circularStrokeCap: CircularStrokeCap.round,
+          ),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Daily Meals',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 25)),
-                  Icon(Icons.restaurant_menu_outlined,
-                      color: iconColor, size: 32),
+                  if (heartIcon != null)
+                    Icon(heartIcon, size: 16, color: Colors.red),
+                  if (waterDrop != null)
+                    Icon(waterDrop, size: 16, color: Colors.blue),
+                  const SizedBox(width: 4),
+                  Text(
+                    bottomLeftLabel,
+                    style:
+                        const TextStyle(fontSize: 12, color: Color(0xFF666666)),
+                  ),
                 ],
-              ),
-              SizedBox(height: 5),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
               ),
             ],
           ),
-        ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Badge extends StatelessWidget {
+  const _Badge({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.35,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: const [
+          // Badge 1
+          Column(
+            children: [
+              CircleAvatar(
+                radius: 16, // smaller
+                backgroundColor: Color(0xFFFFF2E5),
+                child: Icon(
+                  Icons.directions_walk,
+                  size: 16, // smaller
+                  color: Color(0xFFFFA726),
+                ),
+              ),
+              SizedBox(height: 4), // tighter spacing
+              Text(
+                '10K Steps',
+                style: TextStyle(
+                  fontSize: 10, // smaller
+                  color: Color(0xFF333333),
+                ),
+              ),
+            ],
+          ),
+          // Badge 2
+          Column(
+            children: [
+              CircleAvatar(
+                radius: 16,
+                backgroundColor: Color(0xFFFFF2E5),
+                child: Icon(
+                  Icons.local_fire_department,
+                  size: 16,
+                  color: Color(0xFFFFA726),
+                ),
+              ),
+              SizedBox(height: 4),
+              Text(
+                '7d Streak!',
+                style: TextStyle(fontSize: 10, color: Color(0xFF333333)),
+              ),
+            ],
+          ),
+          // Badge 3
+          Column(
+            children: [
+              CircleAvatar(
+                radius: 16,
+                backgroundColor: Color(0xFFFFF2E5),
+                child: Icon(
+                  Icons.bolt,
+                  size: 16,
+                  color: Color(0xFFFFA726),
+                ),
+              ),
+              SizedBox(height: 4),
+              Text(
+                'Pro',
+                style: TextStyle(fontSize: 10, color: Color(0xFF333333)),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _GoalTile extends StatelessWidget {
+  final List<String> goals;
+  const _GoalTile(this.goals, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.3,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "Today's Goals",
+            style: TextStyle(
+              color: Color(0xFF333333),
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          ...goals.map((goal) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.check_box,
+                      size: 16,
+                      color: Color(0xFFA2E4DC),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        goal,
+                        style: const TextStyle(
+                          color: Color(0xFF333333),
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )),
+        ],
       ),
     );
   }

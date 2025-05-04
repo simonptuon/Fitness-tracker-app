@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fitness_app_capstone/pages/ActivitiesScreen.dart';
 import 'package:fitness_app_capstone/pages/activitiesScreen.dart';
 import 'package:flutter/material.dart';
 import 'Signup.dart';

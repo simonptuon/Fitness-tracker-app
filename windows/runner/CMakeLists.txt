@@ -6,7 +6,6 @@ project(runner LANGUAGES CXX)
 # work.
 #
 # Any new source files that you add to the application should be added here.
-
 add_executable(${BINARY_NAME} WIN32
   "flutter_window.cpp"
   "main.cpp"
@@ -34,7 +33,24 @@ target_compile_definitions(${BINARY_NAME} PRIVATE "NOMINMAX")
 # Add dependency libraries and include directories. Add any application-specific
 # dependencies here.
 target_link_libraries(${BINARY_NAME} PRIVATE flutter flutter_wrapper_app)
-target_link_libraries(${BINARY_NAME} PRIVATE "dwmapi.lib")
+
+# Link Windows system libs
+target_link_libraries(${BINARY_NAME} PRIVATE
+  "dwmapi.lib"
+)
+
+# ─── FIREBASE C++ SDK LIBRARIES ────────────────────────────────────────────────
+# Adjust the path below to wherever you unpacked the Firebase C++ .lib files.
+# We're linking firebase_app.lib AND flatbuffers.lib to resolve those missing symbols.
+set(FIREBASE_LIB_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/firebase/lib/windows/x64/debug")
+
+target_link_libraries(${BINARY_NAME} PRIVATE
+  "${FIREBASE_LIB_DIR}/firebase_app.lib"
+  "${FIREBASE_LIB_DIR}/flatbuffers.lib"
+  # … any other firebase_*.lib you need …
+)
+
+# Include runner sources
 target_include_directories(${BINARY_NAME} PRIVATE "${CMAKE_SOURCE_DIR}")
 
 # Run the Flutter tool portions of the build. This must not be removed.

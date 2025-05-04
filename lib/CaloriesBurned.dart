@@ -4,19 +4,20 @@ import 'dart:io';
 import 'package:fitness_app_capstone/pages/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'SignUpPage.dart';
 
 class CalorieData {
   CalorieData(this.date, this.calories);
   final String date;
   final double calories;
 }
+
 Future<List<CalorieData>> loadCalorieData() async {
   try {
     final file = File('calorie_data.json');
     if (!await file.exists()) {
       await file.create();
-      await file.writeAsString(jsonEncode([])); // Write an empty list as initial content
+      await file.writeAsString(
+          jsonEncode([])); // Write an empty list as initial content
     }
 
     final String response = await file.readAsString();
@@ -48,6 +49,7 @@ class _CaloriesBurnedState extends State<CaloriesBurned> {
     super.initState();
     _loadData();
   }
+
 /*
   const CaloriesBurned({super.key});
 */
@@ -57,12 +59,16 @@ class _CaloriesBurnedState extends State<CaloriesBurned> {
       appBar: AppBar(
         title: Text(
           'Calories Burned',
-          style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.bold, color: Colors.white),
+          style: TextStyle(
+              fontFamily: 'Roboto',
+              fontWeight: FontWeight.bold,
+              color: Colors.white),
         ),
         backgroundColor: Colors.deepPurple,
         leading: IconButton(
           icon: const Icon(
-            Icons.home, color: Colors.white,
+            Icons.home,
+            color: Colors.white,
           ),
           onPressed: () {
             Navigator.pop(
@@ -104,6 +110,7 @@ class _CaloriesBurnedState extends State<CaloriesBurned> {
       ),
     );
   }
+
   void _loadData() async {
     List<CalorieData> data = await loadCalorieData();
     setState(() {
