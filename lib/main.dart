@@ -10,12 +10,12 @@ import 'package:fitness_app_capstone/pages/loginui.dart';
 import 'package:fitness_app_capstone/pages/activitiesScreen.dart';
 import 'package:fitness_app_capstone/pages/sleepSchedule.dart';
 import 'package:fitness_app_capstone/pages/water.dart';
-import 'package:alarm/alarm.dart';
+// import 'package:alarm/alarm.dart
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Alarm.init();
+  // await Alarm.init();
 
   // Then initialize Firebase:
   await Firebase.initializeApp(
@@ -60,7 +60,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const ActivitiesScreen(),
+      home: const LoginPage(),
       routes: {
         '/login': (context) => const LoginPage(),
         '/activities': (context) => const ActivitiesScreen(),

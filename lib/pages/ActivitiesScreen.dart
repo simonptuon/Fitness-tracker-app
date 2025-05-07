@@ -85,7 +85,7 @@ class Dashboard extends StatelessWidget {
             final waterConsumed = (data['waterConsumed'] as num).toDouble();
 
             return SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -116,7 +116,7 @@ class Dashboard extends StatelessWidget {
                   const SizedBox(height: 20),
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(18),
                     decoration: BoxDecoration(
                       color: const Color(0xFFA2E4DC),
                       borderRadius: BorderRadius.circular(12),
@@ -159,7 +159,6 @@ class Dashboard extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // first row: two stat cards side by side
                       Row(
                         children: [
                           _StatCard(
@@ -172,7 +171,7 @@ class Dashboard extends StatelessWidget {
                             bottomLeftLabel: '${hr.toString()} bpm',
                             bottomRightPlaceholder: true,
                           ),
-                          const SizedBox(width: 16),
+                          const SizedBox(width: 35),
                           _StatCard(
                             value: calories.toString(),
                             title: 'Calories',
@@ -186,11 +185,12 @@ class Dashboard extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 24),
-                      // second row: one stat card + badge panel
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           _StatCard(
                             value: hr.toString(),
+                            height: 185,
                             title: 'Heart',
                             percent: hrPct,
                             ringColor: const Color(0xFF00C9A7),
@@ -199,17 +199,15 @@ class Dashboard extends StatelessWidget {
                             bottomLeftLabel: '$waterConsumed L',
                             bottomRightPlaceholder: true,
                           ),
-                          const SizedBox(width: 16),
+                          const SizedBox(width: 30),
                           Column(
                             children: [
                               _Badge(),
-                              const SizedBox(
-                                height: 8,
-                              ),
+                              const SizedBox(height: 8),
                               _GoalTile([
                                 "Reach 3500 Calories",
                                 "Drink 2 L Water",
-                                "Log a Workout"
+                                "Log a Workout",
                               ]),
                             ],
                           ),
@@ -277,6 +275,7 @@ class _StatCard extends StatelessWidget {
   final IconData? waterDrop;
   final String bottomLeftLabel;
   final bool bottomRightPlaceholder;
+  final double? height;
 
   const _StatCard({
     required this.title,
@@ -288,17 +287,19 @@ class _StatCard extends StatelessWidget {
     this.heartIcon,
     required this.bottomLeftLabel,
     this.bottomRightPlaceholder = false,
+    this.height,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.3,
+      height: height ?? 200,
+      width: MediaQuery.of(context).size.width * 0.4,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(15),
       ),
       child: Column(
         children: [
@@ -373,7 +374,7 @@ class _Badge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.35,
+      width: MediaQuery.of(context).size.width * 0.42,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -382,29 +383,27 @@ class _Badge extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: const [
-          // Badge 1
           Column(
             children: [
               CircleAvatar(
-                radius: 16, // smaller
+                radius: 16,
                 backgroundColor: Color(0xFFFFF2E5),
                 child: Icon(
                   Icons.directions_walk,
-                  size: 16, // smaller
+                  size: 16,
                   color: Color(0xFFFFA726),
                 ),
               ),
-              SizedBox(height: 4), // tighter spacing
+              SizedBox(height: 4),
               Text(
                 '10K Steps',
                 style: TextStyle(
-                  fontSize: 10, // smaller
+                  fontSize: 10,
                   color: Color(0xFF333333),
                 ),
               ),
             ],
           ),
-          // Badge 2
           Column(
             children: [
               CircleAvatar(
@@ -423,7 +422,6 @@ class _Badge extends StatelessWidget {
               ),
             ],
           ),
-          // Badge 3
           Column(
             children: [
               CircleAvatar(
@@ -455,7 +453,7 @@ class _GoalTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.3,
+      width: MediaQuery.of(context).size.width * 0.42,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
