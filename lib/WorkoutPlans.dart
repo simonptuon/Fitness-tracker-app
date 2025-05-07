@@ -324,82 +324,179 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
                 ),
               ),
             ),
-
-            Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                padding: EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.8),
-                  borderRadius: BorderRadius.circular(10.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 10.0,
-                      offset: Offset(0, 5),
-                    ),
-                  ],
-                ),
-                child: DropdownButton<String>(
-                  value: dropdownValue,
-                  icon: Icon(Icons.arrow_downward, color: Colors.deepPurple),
-                  iconSize: 24,
-                  elevation: 16,
-                  style: TextStyle(color: Colors.deepPurple, fontSize: 18, fontFamily: 'Roboto'),
-                  underline: Container(
-                    height: 2,
-                    color: Colors.deepPurpleAccent,
-                  ),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      dropdownValue = newValue!;
-                      currentButtonOptions =
-                          categoryButtonOptions[dropdownValue] ?? [];
-                    });
-                  },
-                  items: workoutCategories
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
-              ),
-              SizedBox(height: 20),
-              Wrap(
-                spacing: 8.0,
-                runSpacing: 4.0,
-                children: currentButtonOptions.map((option) {
-                  return ElevatedButton(
-                    onPressed: () {
-                      showExerciseDialog(option);
-                    },
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.fitness_center, color: Colors.white),
-                        SizedBox(width: 8),
-                        Text(option, style: TextStyle(fontFamily: 'Roboto')),
-                      ],
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepPurple,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
+            Padding(
+              padding: EdgeInsets.only(left: 0),
+              child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: EdgeInsets.only(top: 16.0, left: 16.0, bottom: 18.0),
+                  margin: EdgeInsets.symmetric(horizontal: 16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.8),
+                    borderRadius: BorderRadius.circular(10.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 10.0,
+                        offset: Offset(0, 5),
                       ),
-                      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                    ),
-                  );
-                }).toList(),
-            ),
-            ],
-
+                    ],
+                  ),
+                  child: DropdownButton<String>(
+                    isExpanded: true, // Make the dropdown take the full width
+                    value: dropdownValue,
+                    icon: const Icon(Icons.arrow_downward, color: Colors.deepPurple),
+                    iconSize: 24,
+                    elevation: 16,
+                    style: const TextStyle(color: Colors.deepPurple, fontSize: 18, fontFamily: 'Roboto'),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownValue = newValue!;
+                        currentButtonOptions =
+                            categoryButtonOptions[dropdownValue] ?? [];
+                      });
+                      },
+                      items: workoutCategories
+                          .map<DropdownMenuItem<String>>((String value) {
+                        String imagePath;
+                        switch (value) {
+                          case 'Exercises':
+                            imagePath = 'images/Exercises.png';
+                            break;
+                          case 'Beginner':
+                            imagePath = 'images/Beginner.png';
+                            break;
+                          case 'Muscle Building':
+                            imagePath = 'images/Muscle Building.png';
+                            break;
+                          case 'Fat Loss':
+                            imagePath = 'images/Fat Loss.png';
+                            break;
+                          case 'Ab Workouts':
+                            imagePath = 'images/Ab Workouts.png';
+                            break;
+                          case 'Full Body':
+                            imagePath = 'images/Full Body.png';
+                            break;
+                          case 'Body Weight':
+                            imagePath = 'images/Body Weight.png';
+                            break;
+                          case 'At Home':
+                            imagePath = 'images/At Home.png';
+                            break;
+                          case 'Cardio':
+                            imagePath = 'images/Cardio.png';
+                            break;
+                          default:
+                            imagePath = '';
+                        }
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Row(
+                            children: [
+                              Expanded(child: Text(value)),
+                              const SizedBox(width: 8),
+                              if (imagePath.isNotEmpty)
+                                Image.asset(imagePath, width: 80, height: 80, fit: BoxFit.contain), // Adjust image size
+                            ],
+                          ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+                SizedBox(height: 20),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: currentButtonOptions.length,
+                    itemBuilder: (context, index) {
+                      final option = currentButtonOptions[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            showExerciseDialog(option);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.deepPurple,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                          ),
+                          child: Text(option, style: TextStyle(fontFamily: 'Roboto')),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(height: 20),
+              ],
           ),
-        ),]
-      ));
+            )
+          ]
+      )
+    );
   }
 }
+// Container(
+//   padding: EdgeInsets.all(16.0),
+//   decoration: BoxDecoration(
+//     borderRadius: BorderRadius.circular(10.0),
+//     boxShadow: [
+//       BoxShadow(
+//         color: Colors.black26,
+//         blurRadius: 10.0,
+//         offset: Offset(0, 5),
+//       ),
+//     ],
+//   ),
+//   child: Wrap(
+//     spacing: 8.0,
+//     runSpacing: 4.0,
+//     children: currentButtonOptions.map((option) {
+//       return ElevatedButton(
+//         onPressed: () {
+//           showExerciseDialog(option);
+//         },
+//         style: ElevatedButton.styleFrom(
+//           backgroundColor: Colors.deepPurple,
+//           foregroundColor: Colors.white,
+//           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0),
+//           ),
+//           padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+//         ),
+//         child: Row(
+//           mainAxisSize: MainAxisSize.min,
+//           children: [
+//             Icon(Icons.fitness_center, color: Colors.white),
+//             SizedBox(width: 8),
+//             Text(option, style: TextStyle(fontFamily: 'Roboto')),
+//           ],
+//         ),
+//       );
+//     }).toList(),
+//   ),
+// )
+
+// children: currentButtonOptions.map((option) {
+//   return ElevatedButton(
+//     onPressed: () {
+//       showExerciseDialog(option);
+//     },
+//     child: Row(
+//       mainAxisSize: MainAxisSize.min,
+//       children: [
+//         Icon(Icons.fitness_center, color: Colors.white),
+//         SizedBox(width: 8),
+//         Text(option, style: TextStyle(fontFamily: 'Roboto')),
+//       ],
+//     ),
+//     style: ElevatedButton.styleFrom(
+//       backgroundColor: Colors.deepPurple,
+//       foregroundColor: Colors.white,
+//       shape: RoundedRectangleBorder(
+//         borderRadius: BorderRadius.circular(10.0),
+//       ),
+//       padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+//     ),
+//   );
+// }).toList(),
