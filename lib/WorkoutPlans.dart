@@ -273,7 +273,7 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
                   width: 200,
                   height: 150,
                 ),
-              Text(exerciseDescriptions[exercise] ?? 'No description available.'),
+              Text(exerciseDescriptions[exercise] ?? 'No description available.', textAlign: TextAlign.center,),
               SizedBox(height: 10),
               Text('Recommended: ${exerciseStrategies[exercise] ?? 'No strategy available.'}', style: TextStyle(fontStyle: FontStyle.italic)),
             ],
@@ -295,7 +295,9 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Workout Plans', style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.bold, color: Colors.white)),
+        title: Text('Workout Plans', style: TextStyle(fontFamily: 'Roboto',
+            fontWeight: FontWeight.bold,
+            color: Colors.white)),
         backgroundColor: Colors.deepPurple,
         leading: IconButton(
           icon: const Icon(
@@ -310,133 +312,198 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
         ),
       ),
       body: Stack(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('images/Exercise Background Image.png'),
-                  fit: BoxFit.cover,
-                ),
-                gradient: LinearGradient(
-                  colors: [Colors.deepPurple, Colors.purpleAccent],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('images/Exercise Background Image.png'),
+                fit: BoxFit.cover,
+              ),
+              gradient: LinearGradient(
+                colors: [Colors.deepPurple, Colors.purpleAccent],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(left: 0),
-              child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  padding: EdgeInsets.only(top: 16.0, left: 16.0, bottom: 18.0),
-                  margin: EdgeInsets.symmetric(horizontal: 16.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.8),
-                    borderRadius: BorderRadius.circular(10.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 10.0,
-                        offset: Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: DropdownButton<String>(
-                    isExpanded: true, // Make the dropdown take the full width
-                    value: dropdownValue,
-                    icon: const Icon(Icons.arrow_downward, color: Colors.deepPurple),
-                    iconSize: 24,
-                    elevation: 16,
-                    style: const TextStyle(color: Colors.deepPurple, fontSize: 18, fontFamily: 'Roboto'),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        dropdownValue = newValue!;
-                        currentButtonOptions =
-                            categoryButtonOptions[dropdownValue] ?? [];
-                      });
-                      },
-                      items: workoutCategories
-                          .map<DropdownMenuItem<String>>((String value) {
-                        String imagePath;
-                        switch (value) {
-                          case 'Exercises':
-                            imagePath = 'images/Exercises.png';
-                            break;
-                          case 'Beginner':
-                            imagePath = 'images/Beginner.png';
-                            break;
-                          case 'Muscle Building':
-                            imagePath = 'images/Muscle Building.png';
-                            break;
-                          case 'Fat Loss':
-                            imagePath = 'images/Fat Loss.png';
-                            break;
-                          case 'Ab Workouts':
-                            imagePath = 'images/Ab Workouts.png';
-                            break;
-                          case 'Full Body':
-                            imagePath = 'images/Full Body.png';
-                            break;
-                          case 'Body Weight':
-                            imagePath = 'images/Body Weight.png';
-                            break;
-                          case 'At Home':
-                            imagePath = 'images/At Home.png';
-                            break;
-                          case 'Cardio':
-                            imagePath = 'images/Cardio.png';
-                            break;
-                          default:
-                            imagePath = '';
-                        }
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Row(
-                            children: [
-                              Expanded(child: Text(value)),
-                              const SizedBox(width: 8),
-                              if (imagePath.isNotEmpty)
-                                Image.asset(imagePath, width: 80, height: 80, fit: BoxFit.contain), // Adjust image size
-                            ],
-                          ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-                SizedBox(height: 20),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: currentButtonOptions.length,
-                    itemBuilder: (context, index) {
-                      final option = currentButtonOptions[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            showExerciseDialog(option);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.deepPurple,
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-                          ),
-                          child: Text(option, style: TextStyle(fontFamily: 'Roboto')),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                SizedBox(height: 20),
-              ],
           ),
-            )
-          ]
-      )
+          Center(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(
+                        top: 16.0, left: 16.0, bottom: 18.0),
+                    margin: EdgeInsets.symmetric(horizontal: 16.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.8),
+                      borderRadius: BorderRadius.circular(10.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 10.0,
+                          offset: Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: workoutCategories.map((String value) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10.0, vertical: 4.0
+                          ),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                dropdownValue = value;
+                                currentButtonOptions = categoryButtonOptions[dropdownValue] ?? [];
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.deepPurple,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0)
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(value, style: TextStyle(fontFamily: 'Roboto')),
+                                if (value.isNotEmpty)
+                                  Image.asset(
+                                    'images/${value.replaceAll(' ', ' ')}.png',
+                                    width: 80,
+                                    height: 80,
+                                    fit: BoxFit.contain,
+                                  ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }).expand((element) => [
+                        element,
+                        SizedBox(height: 4.0)
+                      ]).toList()..removeLast(),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Exercises for $dropdownValue'),
+                              content: Container(
+                                width: double.maxFinite,
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: currentButtonOptions.length,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    String exercise = currentButtonOptions[index];
+                                    return ListTile(
+                                      title: Text(exercise),
+                                      onTap: () {
+                                        Navigator.of(context)
+                                            .pop();
+                                        showExerciseDialog(exercise);
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text('Close'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.deepPurple,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0)
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 12.0
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.fitness_center, color: Colors.white),
+                          SizedBox(width: 8),
+                          Text('View Exercises', style: TextStyle(
+                            fontFamily: 'Roboto', fontSize: 18)
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20)
+                ]
+              ),
+            ),
+          ),
+        ]
+      ),
     );
   }
 }
+/*
+              Container(
+                padding: EdgeInsets.all(16.0),
+                margin: EdgeInsets.symmetric(horizontal: 16.0),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.8),
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 10.0,
+                      offset: Offset(0, 5),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    for (var option in currentButtonOptions)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4.0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            showExerciseDialog(option);
+                            children: [
+                              Text(option, style: TextStyle(fontFamily: 'Roboto')),
+                            ],
+                          ),
+                        ),
+                      ),
+                  ],
+
+                ),
+              ),
+              SizedBox(height: 20),
+            ],
+          ),
+        )
+      ),
+    ]
+
+  )
+);
+//   }
+// }
 // Container(
 //   padding: EdgeInsets.all(16.0),
 //   decoration: BoxDecoration(
@@ -476,27 +543,4 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
 //     }).toList(),
 //   ),
 // )
-
-// children: currentButtonOptions.map((option) {
-//   return ElevatedButton(
-//     onPressed: () {
-//       showExerciseDialog(option);
-//     },
-//     child: Row(
-//       mainAxisSize: MainAxisSize.min,
-//       children: [
-//         Icon(Icons.fitness_center, color: Colors.white),
-//         SizedBox(width: 8),
-//         Text(option, style: TextStyle(fontFamily: 'Roboto')),
-//       ],
-//     ),
-//     style: ElevatedButton.styleFrom(
-//       backgroundColor: Colors.deepPurple,
-//       foregroundColor: Colors.white,
-//       shape: RoundedRectangleBorder(
-//         borderRadius: BorderRadius.circular(10.0),
-//       ),
-//       padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-//     ),
-//   );
-// }).toList(),
+*/
