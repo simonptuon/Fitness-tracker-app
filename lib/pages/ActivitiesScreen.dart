@@ -9,26 +9,82 @@ class ActivitiesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Activty Page',
-      theme: ThemeData(
-        scaffoldBackgroundColor: const Color(0xFF007D8C),
-        primaryColor: const Color(0xFF00C9A7),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF00C9A7),
-          elevation: 0,
-        ),
-        textTheme: const TextTheme(
-          bodyMedium: TextStyle(color: Color(0xFF333333)),
-          titleLarge: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF333333),
+        debugShowCheckedModeBanner: false,
+        title: 'Activty Page',
+        theme: ThemeData(
+          scaffoldBackgroundColor: const Color(0xFF007D8C),
+          primaryColor: const Color(0xFF00C9A7),
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Color(0xFF00C9A7),
+            elevation: 0,
+          ),
+          textTheme: const TextTheme(
+            bodyMedium: TextStyle(color: Color(0xFF333333)),
+            titleLarge: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF333333),
+            ),
           ),
         ),
-      ),
-      home: const Dashboard(),
-    );
+        home: const Dashboard(),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              DrawerHeader(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [backgroundColor, backgroundColor2],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+                child: const Text(
+                  'My Activities',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              ListTile(
+                title: const Text('Water Consumed'),
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => WorkoutPlans()));
+                },
+              ),
+              ListTile(
+                title: const Text('Calories Burned'),
+                onTap: () {
+                  Navigator.pushNamed(context, '/calories');
+                },
+              ),
+              ListTile(
+                title: const Text('Exercises'),
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => WorkoutPlans()));
+                },
+              ),
+              ListTile(
+                title: const Text('Steps Taken'),
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => PedometerPage()));
+                },
+              ),
+              ListTile(
+                title: const Text('Sleep Schedule'),
+                onTap: () {
+                  Navigator.pushNamed(context, '/sleep');
+                },
+              ),
+            ],
+          ),
+        ));
   }
 }
 
