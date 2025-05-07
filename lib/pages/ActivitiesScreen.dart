@@ -6,6 +6,9 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 class ActivitiesScreen extends StatelessWidget {
   const ActivitiesScreen({super.key});
 
+  const Color backgroundColor = Color(0xFF1c2e65);
+  const Color backgroundColor2 = Color(0xFF4e6cbb);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -53,7 +56,7 @@ class ActivitiesScreen extends StatelessWidget {
                 title: const Text('Water Consumed'),
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => WorkoutPlans()));
+                      MaterialPageRoute(builder: (context) => WorkOutPlasn()));
                 },
               ),
               ListTile(
