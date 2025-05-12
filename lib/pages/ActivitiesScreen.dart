@@ -28,6 +28,55 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.teal,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundColor: Colors.white,
+                    child: Icon(Icons.person, color: Colors.teal, size: 30),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    'Welcome!',
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.fitness_center),
+              title: const Text('Activities'),
+              onTap: () {
+                Navigator.pushReplacementNamed(context, '/activities');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.water_drop),
+              title: const Text('Water Tracker'),
+              onTap: () {
+                Navigator.pushReplacementNamed(context, '/consumption');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Logout'),
+              onTap: () {
+                FirebaseAuth.instance.signOut();
+                Navigator.pushReplacementNamed(context, '/login');
+              },
+            ),
+          ],
+        ),
+      ),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -51,8 +100,13 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                   fontFamily: 'Poppins',
                 ),
                 actions: const [
-                  CircleAvatar(child: Icon(Icons.person, color: Colors.white), backgroundColor: Colors.grey),
-                  SizedBox(width: 16),
+                  Padding(
+                    padding: EdgeInsets.only(right: 16.0),
+                    child: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      child: Icon(Icons.person, color: Colors.teal),
+                    ),
+                  ),
                 ],
               ),
               TextField(
@@ -153,23 +207,20 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                                 value: steps.toString(),
                                 unit: 'steps',
                                 height: 240,
-                                circularIndicator: SizedBox(
-                                  height: 80,
-                                  child: CircularPercentIndicator(
-                                    radius: 50.0,
-                                    lineWidth: 4.0,
-                                    percent: (steps / 10000).clamp(0.0, 1.0),
-                                    center: Text(
-                                      "${((steps / 10000) * 100).toInt()}%\nSteps",
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: iconColor),
-                                    ),
-                                    progressColor: iconColor,
-                                    backgroundColor: Colors.white24,
-                                    circularStrokeCap: CircularStrokeCap.round,
-                                    animation: true,
-                                    animationDuration: 1200,
+                                circularIndicator: CircularPercentIndicator(
+                                  radius: 40.0,
+                                  lineWidth: 4.0,
+                                  percent: (steps / 10000).clamp(0.0, 1.0),
+                                  center: Text(
+                                    "${((steps / 10000) * 100).toInt()}%\nSteps",
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: iconColor),
                                   ),
+                                  progressColor: iconColor,
+                                  backgroundColor: Colors.white24,
+                                  circularStrokeCap: CircularStrokeCap.round,
+                                  animation: true,
+                                  animationDuration: 1200,
                                 ),
                               ),
                               _buildActivityCard(
@@ -195,23 +246,20 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                                 value: calories.toString(),
                                 unit: 'kcal',
                                 height: 240,
-                                circularIndicator: SizedBox(
-                                  height: 80,
-                                  child: CircularPercentIndicator(
-                                    radius: 50.0,
-                                    lineWidth: 4.0,
-                                    percent: (calories / 3000).clamp(0.0, 1.0),
-                                    center: Text(
-                                      "$calories\nKcal",
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: iconColor),
-                                    ),
-                                    progressColor: iconColor,
-                                    backgroundColor: Colors.white24,
-                                    circularStrokeCap: CircularStrokeCap.round,
-                                    animation: true,
-                                    animationDuration: 1200,
+                                circularIndicator: CircularPercentIndicator(
+                                  radius: 40.0,
+                                  lineWidth: 4.0,
+                                  percent: (calories / 3000).clamp(0.0, 1.0),
+                                  center: Text(
+                                    "$calories\nKcal",
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: iconColor),
                                   ),
+                                  progressColor: iconColor,
+                                  backgroundColor: Colors.white24,
+                                  circularStrokeCap: CircularStrokeCap.round,
+                                  animation: true,
+                                  animationDuration: 1200,
                                 ),
                               ),
                             ],
@@ -283,10 +331,9 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
               ],
             ),
             const SizedBox(height: 8),
-            if (circularIndicator != null) ...[
-              circularIndicator,
-              const SizedBox(height: 8),
-            ] else ...[
+            if (circularIndicator != null)
+              Expanded(child: Center(child: circularIndicator)),
+            if (circularIndicator == null) ...[
               Row(
                 children: [
                   Text(value,
