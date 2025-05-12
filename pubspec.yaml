@@ -26,15 +26,23 @@ dependencies:
   collection: any
 
 flutter_launcher_icons:
-  android: "launcher_icon"
+  android: true
   ios: true
   image_path: "images/AppIcon.png"
+
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: images/AppIcon.png
+  android: true
+  ios: true
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
   flutter_launcher_icons: ^0.14.3
+  flutter_native_splash: ^2.3.5
+
 
 flutter:
   uses-material-design: true
