@@ -66,6 +66,8 @@ class MyApp extends StatelessWidget {
         '/activities': (context) => const ActivitiesScreen(),
         '/consumption': (context) => const Water(),
         '/pedometer': (context) => const PedometerPage(),
+        '/workoutplans': (context) => WorkoutPlans(),
+        '/calories': (context) => CaloriesBurned(),
       },
     );
   }

@@ -1,3 +1,4 @@
+import 'package:fitness_app_capstone/pages/custom_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -63,6 +64,7 @@ class _PedometerPageState extends State<PedometerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: CustomDrawer(),
       appBar: AppBar(
         title: const Text('Step Counter'),
         backgroundColor: Colors.teal,

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness_app_capstone/data/notifiers.dart';
+import 'package:fitness_app_capstone/pages/custom_drawer.dart';
 import 'package:fitness_app_capstone/pages/history_water_page.dart';
 import 'package:fitness_app_capstone/pages/report_water_page.dart';
 import 'package:fitness_app_capstone/pages/water_home_page.dart';
@@ -21,62 +22,7 @@ class Water extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.teal,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundColor: Colors.white,
-                    child: Icon(Icons.person, color: Colors.teal, size: 30),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    'Welcome!',
-                    style: TextStyle(color: Colors.white, fontSize: 20),
-                  ),
-                ],
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.fitness_center),
-              title: const Text('Activities'),
-              onTap: () {
-                Navigator.pushReplacementNamed(context, '/activities');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.water_drop),
-              title: const Text('Water Tracker'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.directions_walk),
-              title: const Text('Pedometer'),
-              onTap: () {
-                Navigator.pushReplacementNamed(context, '/pedometer');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text('Logout'),
-              onTap: () {
-                FirebaseAuth.instance.signOut();
-                Navigator.pushReplacementNamed(context, '/login');
-              },
-            ),
-          ],
-        ),
-      ),
+      drawer: CustomDrawer(),
       appBar: AppBar(
         title: Text(
           'Water Consumption',

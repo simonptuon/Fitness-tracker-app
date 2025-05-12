@@ -1,3 +1,4 @@
+import 'package:fitness_app_capstone/pages/custom_drawer.dart';
 import 'package:flutter/material.dart';
 
 class WorkoutPlans extends StatefulWidget {
@@ -293,19 +294,10 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: CustomDrawer(),
       appBar: AppBar(
         title: Text('Workout Plans', style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.bold, color: Colors.white)),
         backgroundColor: Colors.deepPurple,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.home, color: Colors.white,
-          ),
-          onPressed: () {
-            Navigator.pop(
-              context,
-            );
-          },
-        ),
       ),
       body: Stack(
           children: [

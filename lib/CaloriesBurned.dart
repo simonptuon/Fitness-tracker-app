@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:fitness_app_capstone/pages/custom_drawer.dart';
 import 'package:fitness_app_capstone/pages/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -52,22 +53,13 @@ class _CaloriesBurnedState extends State<CaloriesBurned> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: CustomDrawer(),
       appBar: AppBar(
         title: Text(
           'Calories Burned',
           style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.bold, color: Colors.white),
         ),
         backgroundColor: Colors.deepPurple,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.home, color: Colors.white,
-          ),
-          onPressed: () {
-            Navigator.pop(
-              context,
-            );
-          },
-        ),
       ),
       body: Container(
         decoration: BoxDecoration(
