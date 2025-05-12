@@ -24,6 +24,7 @@ const Color iconColor = Color(0xFF583867);
 class _ActivitiesScreenState extends State<ActivitiesScreen> {
   String selectedFilter = 'Daily';
   final List<String> filters = ['Daily', 'Weekly', 'Monthly', 'Yearly'];
+  bool showStepsProgress = true;
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +68,13 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
               },
             ),
             ListTile(
+              leading: const Icon(Icons.directions_walk),
+              title: const Text('Pedometer'),
+              onTap: () {
+                Navigator.pushReplacementNamed(context, '/pedometer');
+              },
+            ),
+            ListTile(
               leading: const Icon(Icons.logout),
               title: const Text('Logout'),
               onTap: () {
@@ -74,6 +82,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                 Navigator.pushReplacementNamed(context, '/login');
               },
             ),
+
           ],
         ),
       ),
@@ -183,10 +192,11 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
 
                     final data = snapshot.data!.data() as Map<String, dynamic>;
 
-                    final steps = data['steps'] ?? 0;
+                    final steps = data['stepCount'] ?? 0;
                     final sleepHours = data['sleep'] ?? '8:00';
                     final heartRate = data['heartRate'] ?? 72;
                     final calories = data['caloriesBurned'] ?? 375;
+                    const goalSteps = 10000;
 
                     return SingleChildScrollView(
                       child: Column(
@@ -201,26 +211,72 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                               mainAxisSpacing: 12,
                             ),
                             children: [
-                              _buildActivityCard(
-                                icon: Icons.directions_walk_outlined,
-                                title: 'Steps',
-                                value: steps.toString(),
-                                unit: 'steps',
-                                height: 240,
-                                circularIndicator: CircularPercentIndicator(
-                                  radius: 40.0,
-                                  lineWidth: 4.0,
-                                  percent: (steps / 10000).clamp(0.0, 1.0),
-                                  center: Text(
-                                    "${((steps / 10000) * 100).toInt()}%\nSteps",
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: iconColor),
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    showStepsProgress = !showStepsProgress;
+                                  });
+                                },
+                                child: _buildActivityCard(
+                                  icon: Icons.directions_walk_outlined,
+                                  title: 'Steps',
+                                  value: steps.toString(),
+                                  unit: 'steps',
+                                  height: 240,
+                                  circularIndicator: AnimatedSwitcher(
+                                    duration: const Duration(milliseconds: 300),
+                                    transitionBuilder: (Widget child, Animation<double> animation) {
+                                      return ScaleTransition(scale: animation, child: child);
+                                    },
+                                    child: showStepsProgress
+                                        ? CircularPercentIndicator(
+                                      key: const ValueKey('progress'),
+                                      radius: 40.0,
+                                      lineWidth: 4.0,
+                                      percent: (steps / goalSteps).clamp(0.0, 1.0),
+                                      center: Text(
+                                        "${((steps / goalSteps) * 100).toInt()}%\nSteps",
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                            color: iconColor),
+                                      ),
+                                      progressColor: iconColor,
+                                      backgroundColor: Colors.white24,
+                                      circularStrokeCap: CircularStrokeCap.round,
+                                      animation: true,
+                                      animationDuration: 1200,
+                                    )
+                                        : Column(
+                                      key: const ValueKey('count'),
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          '$steps',
+                                          style: const TextStyle(
+                                            fontSize: 30,
+                                            fontWeight: FontWeight.bold,
+                                            color: iconColor,
+                                          ),
+                                        ),
+                                        Text(
+                                          '/ $goalSteps',
+                                          style: const TextStyle(
+                                            fontSize: 20,
+                                            color: iconColor,
+                                          ),
+                                        ),
+                                        const Text(
+                                          'steps',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: iconColor,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  progressColor: iconColor,
-                                  backgroundColor: Colors.white24,
-                                  circularStrokeCap: CircularStrokeCap.round,
-                                  animation: true,
-                                  animationDuration: 1200,
                                 ),
                               ),
                               _buildActivityCard(

@@ -60,6 +60,13 @@ class Water extends StatelessWidget {
               },
             ),
             ListTile(
+              leading: const Icon(Icons.directions_walk),
+              title: const Text('Pedometer'),
+              onTap: () {
+                Navigator.pushReplacementNamed(context, '/pedometer');
+              },
+            ),
+            ListTile(
               leading: const Icon(Icons.logout),
               title: const Text('Logout'),
               onTap: () {
