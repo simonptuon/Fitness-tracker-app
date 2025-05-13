@@ -1,3 +1,4 @@
+
 import 'package:fitness_app_capstone/CaloriesBurned.dart';
 import 'package:fitness_app_capstone/pages/pedometer.dart';
 import 'package:flutter/material.dart';
@@ -11,19 +12,103 @@ import 'package:fitness_app_capstone/pages/loginui.dart';
 import 'package:fitness_app_capstone/pages/ActivitiesScreen.dart';
 import 'package:fitness_app_capstone/pages/Water.dart';
 import 'WorkoutPlans.dart';
-
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase before the app starts
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  await resetUserMetricsIfNeeded(); // Check and reset metrics
+
   runApp(const MyApp());
 }
+
+Future<void> resetUserMetricsIfNeeded() async {
+  final uid = FirebaseAuth.instance.currentUser?.uid;
+  if (uid == null) return;
+
+  final userRef = FirebaseFirestore.instance.collection('users').doc(uid);
+  final snapshot = await userRef.get();
+
+  if (!snapshot.exists) return;
+  final data = snapshot.data()!;
+
+  final now = Timestamp.now();
+  final nowDate = now.toDate();
+
+  final lastDaily = (data['lastDailyUpdate'] as Timestamp).toDate();
+  final lastWeekly = (data['lastWeeklyUpdate'] as Timestamp).toDate();
+  final lastMonthly = (data['lastMonthlyUpdate'] as Timestamp).toDate();
+  final lastYearly = (data['lastYearlyUpdate'] as Timestamp).toDate();
+
+  final updates = <String, dynamic>{};
+
+  if (!_isSameDay(nowDate, lastDaily)) {
+    updates.addAll({
+      'caloriesBurned': 0,
+      'waterConsumed': 0,
+      'heartRate': 0,
+      'stepCount': 0,
+      'sleep': '0:00',
+      'lastDailyUpdate': now,
+    });
+  }
+
+  if (!_isSameWeek(nowDate, lastWeekly)) {
+    updates.addAll({
+      'weeklyCaloriesBurned': 0,
+      'weeklyWaterConsumed': 0,
+      'weeklyHeartRate': 0,
+      'weeklySteps': 0,
+      'weeklySleep': '0:00',
+      'lastWeeklyUpdate': now,
+    });
+  }
+
+  if (!_isSameMonth(nowDate, lastMonthly)) {
+    updates.addAll({
+      'monthlyCaloriesBurned': 0,
+      'monthlyWaterConsumed': 0,
+      'monthlyHeartRate': 0,
+      'monthlySteps': 0,
+      'monthlySleep': '0:00',
+      'lastMonthlyUpdate': now,
+    });
+  }
+
+  if (!_isSameYear(nowDate, lastYearly)) {
+    updates.addAll({
+      'yearlyCaloriesBurned': 0,
+      'yearlyWaterConsumed': 0,
+      'yearlyHeartRate': 0,
+      'yearlySteps': 0,
+      'yearlySleep': '0:00',
+      'lastYearlyUpdate': now,
+    });
+  }
+
+  if (updates.isNotEmpty) {
+    await userRef.update(updates);
+  }
+}
+
+bool _isSameDay(DateTime a, DateTime b) =>
+    a.year == b.year && a.month == b.month && a.day == b.day;
+
+bool _isSameWeek(DateTime a, DateTime b) {
+  final aWeek = a.subtract(Duration(days: a.weekday));
+  final bWeek = b.subtract(Duration(days: b.weekday));
+  return _isSameDay(aWeek, bWeek);
+}
+
+bool _isSameMonth(DateTime a, DateTime b) =>
+    a.year == b.year && a.month == b.month;
+
+bool _isSameYear(DateTime a, DateTime b) => a.year == b.year;
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -64,41 +149,11 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => const Login(),
         '/activities': (context) => const ActivitiesScreen(),
-        '/consumption': (context) => const Water(),
+        '/consumption': (context) => const WaterTrackerPage(),
         '/pedometer': (context) => const PedometerPage(),
         '/workoutplans': (context) => WorkoutPlans(),
         '/calories': (context) => CaloriesBurned(),
       },
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  final int _counter = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: PieChart(
-          values: [100, 300, 200, 200, 100],
-          colors: [
-            Colors.yellow,
-            Colors.green,
-            Colors.red,
-            Colors.blue,
-            Colors.grey,
-          ],
-        ),
-      ),
     );
   }
 }

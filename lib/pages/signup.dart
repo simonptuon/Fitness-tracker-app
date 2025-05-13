@@ -58,17 +58,55 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Future<void> createUserProfile(User user) async {
-    final userDoc =
-    FirebaseFirestore.instance.collection('users').doc(user.uid);
+    final userDoc = FirebaseFirestore.instance.collection('users').doc(user.uid);
+
+    // Get current timestamp
+    final now = Timestamp.now();
 
     await userDoc.set({
+      // Basic user info
       'email': user.email,
       'fullName': fullNameController.text.trim(),
+      'createdAt': now,
+
+      // Daily tracking
       'caloriesBurned': 0,
       'waterConsumed': 0,
       'heartRate': 0,
       'stepCount': 0,
-      'createdAt': Timestamp.now(),
+      'sleep': '0:00', // Format as "hours:minutes"
+
+      // Weekly
+      'weeklyCaloriesBurned': 0,
+      'weeklyWaterConsumed': 0,
+      'weeklyHeartRate': 0,
+      'weeklySteps': 0,
+      'weeklySleep': '0:00',
+
+      // Monthly
+      'monthlyCaloriesBurned': 0,
+      'monthlyWaterConsumed': 0,
+      'monthlyHeartRate': 0,
+      'monthlySteps': 0,
+      'monthlySleep': '0:00',
+
+      // Yearly
+      'yearlyCaloriesBurned': 0,
+      'yearlyWaterConsumed': 0,
+      'yearlyHeartRate': 0,
+      'yearlySteps': 0,
+      'yearlySleep': '0:00',
+
+      // History tracking
+      'dailyHistory': [],
+      'weeklyHistory': [],
+      'monthlyHistory': [],
+
+      // Last updated timestamps
+      'lastDailyUpdate': now,
+      'lastWeeklyUpdate': now,
+      'lastMonthlyUpdate': now,
+      'lastYearlyUpdate': now,
     });
   }
 

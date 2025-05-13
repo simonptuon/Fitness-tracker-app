@@ -27,6 +27,49 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
   final List<String> filters = ['Daily', 'Weekly', 'Monthly', 'Yearly'];
   bool showStepsProgress = true;
 
+  // Helper method to get data based on selected time period
+  Map<String, dynamic> _getTimePeriodData(Map<String, dynamic> data) {
+    switch (selectedFilter) {
+      case 'Weekly':
+        return {
+          'steps': data['weeklySteps'] ?? 0,
+          'sleep': data['weeklySleep'] ?? '56:00',
+          'heartRate': data['weeklyHeartRate'] ?? 72,
+          'calories': data['weeklyCaloriesBurned'] ?? 2625,
+          'goalSteps': 70000,
+          'goalCalories': 21000,
+        };
+      case 'Monthly':
+        return {
+          'steps': data['monthlySteps'] ?? 0,
+          'sleep': data['monthlySleep'] ?? '240:00',
+          'heartRate': data['monthlyHeartRate'] ?? 72,
+          'calories': data['monthlyCaloriesBurned'] ?? 11250,
+          'goalSteps': 300000,
+          'goalCalories': 90000,
+        };
+      case 'Yearly':
+        return {
+          'steps': data['yearlySteps'] ?? 0,
+          'sleep': data['yearlySleep'] ?? '2920:00',
+          'heartRate': data['yearlyHeartRate'] ?? 72,
+          'calories': data['yearlyCaloriesBurned'] ?? 136875,
+          'goalSteps': 3650000,
+          'goalCalories': 1095000,
+        };
+      case 'Daily':
+      default:
+        return {
+          'steps': data['stepCount'] ?? 0,
+          'sleep': data['sleep'] ?? '8:00',
+          'heartRate': data['heartRate'] ?? 72,
+          'calories': data['caloriesBurned'] ?? 375,
+          'goalSteps': 10000,
+          'goalCalories': 3000,
+        };
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +89,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
               AppBar(
                 backgroundColor: Colors.transparent,
                 elevation: 0,
-                title: const Text('Activities', style: TextStyle(color: Colors.black)),
+                title: Text('$selectedFilter Activities', style: const TextStyle(color: Colors.black)),
                 titleTextStyle: const TextStyle(
                   color: Colors.white,
                   fontSize: 25,
@@ -136,12 +179,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                     }
 
                     final data = snapshot.data!.data() as Map<String, dynamic>;
-
-                    final steps = data['stepCount'] ?? 0;
-                    final sleepHours = data['sleep'] ?? '8:00';
-                    final heartRate = data['heartRate'] ?? 72;
-                    final calories = data['caloriesBurned'] ?? 375;
-                    const goalSteps = 10000;
+                    final periodData = _getTimePeriodData(data);
 
                     return SingleChildScrollView(
                       child: Column(
@@ -165,7 +203,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                                 child: _buildActivityCard(
                                   icon: Icons.directions_walk_outlined,
                                   title: 'Steps',
-                                  value: steps.toString(),
+                                  value: periodData['steps'].toString(),
                                   unit: 'steps',
                                   height: 240,
                                   circularIndicator: AnimatedSwitcher(
@@ -178,9 +216,9 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                                       key: const ValueKey('progress'),
                                       radius: 40.0,
                                       lineWidth: 4.0,
-                                      percent: (steps / goalSteps).clamp(0.0, 1.0),
+                                      percent: (periodData['steps'] / periodData['goalSteps']).clamp(0.0, 1.0),
                                       center: Text(
-                                        "${((steps / goalSteps) * 100).toInt()}%\nSteps",
+                                        "${((periodData['steps'] / periodData['goalSteps']) * 100).toInt()}%\nSteps",
                                         textAlign: TextAlign.center,
                                         style: const TextStyle(
                                             fontSize: 12,
@@ -198,7 +236,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          '$steps',
+                                          '${periodData['steps']}',
                                           style: const TextStyle(
                                             fontSize: 30,
                                             fontWeight: FontWeight.bold,
@@ -206,7 +244,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                                           ),
                                         ),
                                         Text(
-                                          '/ $goalSteps',
+                                          '/ ${periodData['goalSteps']}',
                                           style: const TextStyle(
                                             fontSize: 20,
                                             color: iconColor,
@@ -227,7 +265,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                               _buildActivityCard(
                                 icon: Icons.bedtime_outlined,
                                 title: 'Sleep',
-                                value: sleepHours.toString(),
+                                value: periodData['sleep'].toString(),
                                 unit: 'h',
                                 height: 150,
                                 titleColor: Colors.white,
@@ -237,22 +275,22 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                               _buildActivityCard(
                                 icon: Icons.favorite_outline,
                                 title: 'Heart',
-                                value: heartRate.toString(),
+                                value: periodData['heartRate'].toString(),
                                 unit: 'bpm',
                                 height: 180,
                               ),
                               _buildActivityCard(
                                 icon: Icons.local_fire_department_outlined,
                                 title: 'Kcal',
-                                value: calories.toString(),
+                                value: periodData['calories'].toString(),
                                 unit: 'kcal',
                                 height: 240,
                                 circularIndicator: CircularPercentIndicator(
                                   radius: 40.0,
                                   lineWidth: 4.0,
-                                  percent: (calories / 3000).clamp(0.0, 1.0),
+                                  percent: (periodData['calories'] / periodData['goalCalories']).clamp(0.0, 1.0),
                                   center: Text(
-                                    "$calories\nKcal",
+                                    "${periodData['calories']}\nKcal",
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: iconColor),
                                   ),
@@ -370,23 +408,24 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
             ),
           ],
         ),
-        child: const Padding(
-          padding: EdgeInsets.all(15.0),
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Daily Meals',
+                  Text('$selectedFilter Meals',
                       style:
-                      TextStyle(fontWeight: FontWeight.w500, fontSize: 25)),
-                  Icon(Icons.restaurant_menu_outlined,
+                      const TextStyle(fontWeight: FontWeight.w500, fontSize: 25)),
+                  const Icon(Icons.restaurant_menu_outlined,
                       color: iconColor, size: 32),
                 ],
               ),
-              SizedBox(height: 5),
-              Text('No meals logged today.', style: TextStyle(color: Colors.black54))
+              const SizedBox(height: 5),
+              Text('No meals logged this $selectedFilter.toLowerCase().',
+                  style: const TextStyle(color: Colors.black54))
             ],
           ),
         ),
