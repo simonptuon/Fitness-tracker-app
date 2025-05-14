@@ -1,103 +1,81 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:fitness_app_capstone/pages/custom_drawer.dart';
-import 'package:fitness_app_capstone/pages/signup.dart';
 import 'package:flutter/material.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
-import 'SignUpPage.dart';
-
-class CalorieData {
-  CalorieData(this.date, this.calories);
-  final String date;
-  final double calories;
-}
-Future<List<CalorieData>> loadCalorieData() async {
-  try {
-    final file = File('calorie_data.json');
-    if (!await file.exists()) {
-      await file.create();
-      await file.writeAsString(jsonEncode([])); // Write an empty list as initial content
-    }
-
-    final String response = await file.readAsString();
-    final data = await json.decode(response);
-    List<CalorieData> calorieData = [];
-
-    for (var entry in data) {
-      calorieData.add(CalorieData(entry['date'], entry['calories'].toDouble()));
-    }
-    return calorieData;
-  } catch (e) {
-    print('Error loading calorie data: $e');
-    return []; // Return an empty list in case of an error
-  }
-}
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitness_app_capstone/pages/custom_drawer.dart';
 
 class CaloriesBurned extends StatefulWidget {
+  const CaloriesBurned({super.key});
+
   @override
-  _CaloriesBurnedState createState() => _CaloriesBurnedState();
+  State<CaloriesBurned> createState() => _CaloriesBurnedState();
 }
 
 class _CaloriesBurnedState extends State<CaloriesBurned> {
-  List<CalorieData> calorieData = [];
+  int stepCount = 0;
+  double caloriesBurned = 0.0;
 
   @override
   void initState() {
     super.initState();
-    _loadData();
+    fetchStepCount();
   }
-/*
-  const CaloriesBurned({super.key});
-*/
+
+  Future<void> fetchStepCount() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return;
+
+    final doc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    final data = doc.data();
+    final steps = data?['stepCount'] ?? 0;
+
+    setState(() {
+      stepCount = steps;
+      caloriesBurned = calculateCaloriesFromSteps(steps);
+    });
+  }
+
+  double calculateCaloriesFromSteps(int steps) {
+    // Approx: 0.04 calories per step (varies by height/weight/activity)
+    return steps * 0.04;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: CustomDrawer(),
+      drawer: const CustomDrawer(),
       appBar: AppBar(
-        title: Text(
-          'Calories Burned',
-          style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.bold, color: Colors.white),
-        ),
-        backgroundColor: Colors.deepPurple,
+        title: const Text("Calories Burned"),
+        backgroundColor: Colors.redAccent,
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.deepPurple, Colors.purpleAccent],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: Center(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                height: 300,
-                padding: const EdgeInsets.all(16.0),
-                child: SfCartesianChart(
-                  primaryXAxis: CategoryAxis(),
-                  title: ChartTitle(text: 'Weekly Calories Burned'),
-                  series: <ColumnSeries<CalorieData, String>>[
-                    ColumnSeries<CalorieData, String>(
-                      dataSource: calorieData,
-                      xValueMapper: (CalorieData data, _) => data.date,
-                      yValueMapper: (CalorieData data, _) => data.calories,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+          const Text(
+          'Today\'s Summary',
+              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
         ),
+        const SizedBox(height: 40),
+        Text(
+          'Steps Taken: $stepCount',
+          style: const TextStyle(fontSize: 22),
+        ),
+        const SizedBox(height: 20),
+        Text(
+          'Calories Burned: ${caloriesBurned.toStringAsFixed(2)} kcal',
+          style: const TextStyle(fontSize: 22, color: Colors.deepOrange),
+        ),
+        const SizedBox(height: 40),
+        ElevatedButton(
+          onPressed: fetchStepCount,
+          child: const Text('Refresh'),
+        )
+        ],
       ),
+    ),
+    ),
     );
-  }
-  void _loadData() async {
-    List<CalorieData> data = await loadCalorieData();
-    setState(() {
-      calorieData = data;
-    });
   }
 }
