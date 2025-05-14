@@ -22,9 +22,9 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  await resetUserMetricsIfNeeded(); // Check and reset metrics
+  await resetUserMetricsIfNeeded();
 
-  runApp(const PedometerPage());
+  runApp(const MyApp());
 }
 
 Future<void> resetUserMetricsIfNeeded() async {

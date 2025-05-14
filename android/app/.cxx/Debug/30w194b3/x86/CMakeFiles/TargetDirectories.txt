@@ -1,0 +1,2 @@
+C:/Users/jsabino3895/Fitness-tracker-app/Fitness-tracker-app/android/app/.cxx/Debug/30w194b3/x86/CMakeFiles/edit_cache.dir
+C:/Users/jsabino3895/Fitness-tracker-app/Fitness-tracker-app/android/app/.cxx/Debug/30w194b3/x86/CMakeFiles/rebuild_cache.dir

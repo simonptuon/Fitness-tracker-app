@@ -1,4 +1,4 @@
-import 'package:fitness_app_capstone/pages/custom_drawer.dart';
+import 'package:fitness_app_capstone/pages/ActivitiesScreen.dart';
 import 'package:flutter/material.dart';
 
 class WorkoutPlans extends StatefulWidget {
@@ -273,7 +273,7 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
                   width: 200,
                   height: 150,
                 ),
-              Text(exerciseDescriptions[exercise] ?? 'No description available.'),
+              Text(exerciseDescriptions[exercise] ?? 'No description available.', textAlign: TextAlign.center,),
               SizedBox(height: 10),
               Text('Recommended: ${exerciseStrategies[exercise] ?? 'No strategy available.'}', style: TextStyle(fontStyle: FontStyle.italic)),
             ],
@@ -294,17 +294,29 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: CustomDrawer(),
       appBar: AppBar(
-        title: Text('Workout Plans', style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.bold, color: Colors.white)),
+        title: Text('Workout Plans', style: TextStyle(fontFamily: 'Roboto',
+            fontWeight: FontWeight.bold,
+            color: Colors.white)),
         backgroundColor: Colors.deepPurple,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.home, color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => ActivitiesScreen()),
+            );
+          },
+        ),
       ),
       body: Stack(
           children: [
             Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('images/Exercise Background Image.webp'),
+                  image: AssetImage('images/Exercise Background Image.png'),
                   fit: BoxFit.cover,
                 ),
                 gradient: LinearGradient(
@@ -314,13 +326,144 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
                 ),
               ),
             ),
-
             Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+              child: SingleChildScrollView(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.only(
+                            top: 16.0, left: 16.0, bottom: 18.0),
+                        margin: EdgeInsets.symmetric(horizontal: 16.0),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.8),
+                          borderRadius: BorderRadius.circular(10.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black26,
+                              blurRadius: 10.0,
+                              offset: Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: workoutCategories.map((String value) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 4.0
+                              ),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    dropdownValue = value;
+                                    currentButtonOptions = categoryButtonOptions[dropdownValue] ?? [];
+                                  });
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.deepPurple,
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0)
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(value, style: TextStyle(fontFamily: 'Roboto')),
+                                    if (value.isNotEmpty)
+                                      Image.asset(
+                                        'images/${value.replaceAll(' ', ' ')}.png',
+                                        width: 80,
+                                        height: 80,
+                                        fit: BoxFit.contain,
+                                      ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }).expand((element) => [
+                            element,
+                            SizedBox(height: 4.0)
+                          ]).toList()..removeLast(),
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Exercises for $dropdownValue'),
+                                  content: Container(
+                                    width: double.maxFinite,
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: currentButtonOptions.length,
+                                      itemBuilder: (BuildContext context, int index) {
+                                        String exercise = currentButtonOptions[index];
+                                        return ListTile(
+                                          title: Text(exercise),
+                                          onTap: () {
+                                            Navigator.of(context)
+                                                .pop();
+                                            showExerciseDialog(exercise);
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: Text('Close'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.deepPurple,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0)
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                                vertical: 12.0
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.fitness_center, color: Colors.white),
+                              SizedBox(width: 8),
+                              Text('View Exercises', style: TextStyle(
+                                  fontFamily: 'Roboto', fontSize: 18)
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20)
+                    ]
+                ),
+              ),
+            ),
+          ]
+      ),
+    );
+  }
+}
+/*
               Container(
                 padding: EdgeInsets.all(16.0),
+                margin: EdgeInsets.symmetric(horizontal: 16.0),
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.8),
                   borderRadius: BorderRadius.circular(10.0),
@@ -332,64 +475,72 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
                     ),
                   ],
                 ),
-                child: DropdownButton<String>(
-                  value: dropdownValue,
-                  icon: Icon(Icons.arrow_downward, color: Colors.deepPurple),
-                  iconSize: 24,
-                  elevation: 16,
-                  style: TextStyle(color: Colors.deepPurple, fontSize: 18, fontFamily: 'Roboto'),
-                  underline: Container(
-                    height: 2,
-                    color: Colors.deepPurpleAccent,
-                  ),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      dropdownValue = newValue!;
-                      currentButtonOptions =
-                          categoryButtonOptions[dropdownValue] ?? [];
-                    });
-                  },
-                  items: workoutCategories
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
+                child: Column(
+                  children: [
+                    for (var option in currentButtonOptions)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4.0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            showExerciseDialog(option);
+                            children: [
+                              Text(option, style: TextStyle(fontFamily: 'Roboto')),
+                            ],
+                          ),
+                        ),
+                      ),
+                  ],
+
                 ),
               ),
               SizedBox(height: 20),
-              Wrap(
-                spacing: 8.0,
-                runSpacing: 4.0,
-                children: currentButtonOptions.map((option) {
-                  return ElevatedButton(
-                    onPressed: () {
-                      showExerciseDialog(option);
-                    },
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.fitness_center, color: Colors.white),
-                        SizedBox(width: 8),
-                        Text(option, style: TextStyle(fontFamily: 'Roboto')),
-                      ],
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepPurple,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                    ),
-                  );
-                }).toList(),
-            ),
             ],
-
           ),
-        ),]
-      ));
-  }
-}
+        )
+      ),
+    ]
+
+  )
+);
+//   }
+// }
+// Container(
+//   padding: EdgeInsets.all(16.0),
+//   decoration: BoxDecoration(
+//     borderRadius: BorderRadius.circular(10.0),
+//     boxShadow: [
+//       BoxShadow(
+//         color: Colors.black26,
+//         blurRadius: 10.0,
+//         offset: Offset(0, 5),
+//       ),
+//     ],
+//   ),
+//   child: Wrap(
+//     spacing: 8.0,
+//     runSpacing: 4.0,
+//     children: currentButtonOptions.map((option) {
+//       return ElevatedButton(
+//         onPressed: () {
+//           showExerciseDialog(option);
+//         },
+//         style: ElevatedButton.styleFrom(
+//           backgroundColor: Colors.deepPurple,
+//           foregroundColor: Colors.white,
+//           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0),
+//           ),
+//           padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+//         ),
+//         child: Row(
+//           mainAxisSize: MainAxisSize.min,
+//           children: [
+//             Icon(Icons.fitness_center, color: Colors.white),
+//             SizedBox(width: 8),
+//             Text(option, style: TextStyle(fontFamily: 'Roboto')),
+//           ],
+//         ),
+//       );
+//     }).toList(),
+//   ),
+// )
+*/
