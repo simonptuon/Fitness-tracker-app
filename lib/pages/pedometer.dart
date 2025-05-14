@@ -4,6 +4,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fitness_app_capstone/pages/custom_drawer.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class PedometerPage extends StatefulWidget {
   const PedometerPage({super.key});
@@ -16,6 +17,7 @@ class _PedometerPageState extends State<PedometerPage> {
   late Stream<StepCount> _stepCountStream;
   String _steps = 'Loading...';
   int? _initialStepCount;
+  int stepGoal = 10000;
 
   @override
   void initState() {
@@ -60,7 +62,7 @@ class _PedometerPageState extends State<PedometerPage> {
     if (!mounted) return;
 
     setState(() {
-      _steps = event.steps.toString();
+      _steps = (int.parse(_steps == 'Loading...' ? '0' : _steps) + stepsTaken).toString();
     });
 
     try {
@@ -95,18 +97,61 @@ class _PedometerPageState extends State<PedometerPage> {
 
   @override
   Widget build(BuildContext context) {
+    double progress = 0.0;
+    if (_steps != 'Loading...' && _steps != 'Permission denied' && _steps != 'Step Count not available') {
+      progress = (int.parse(_steps) / stepGoal).clamp(0.0, 1.0);
+    }
+
     return Scaffold(
       drawer: const CustomDrawer(),
       appBar: AppBar(
         title: const Text('Step Counter'),
         backgroundColor: Colors.teal,
       ),
-      body: Center(
-        child: Text(
-          'Steps Taken: $_steps',
-          style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFF1c2e65), Color(0xFF4e6cbb)],
+          ),
+        ),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+            const Text(
+            'Today\'s Steps',
+                style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white),
+          ),
+          const SizedBox(height: 20),
+          CircularPercentIndicator(
+            radius: 120.0,
+            lineWidth: 13.0,
+            animation: true,
+            percent: progress,
+            center: Text(
+              _steps,
+              style: const TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold, color: Colors.white),
+            ),
+            footer: Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: Text(
+                '${(progress * 100).toStringAsFixed(1)}% of $stepGoal steps',
+                style: const TextStyle(fontSize: 18.0, color: Colors.white70),
+              ),
+            ),
+            circularStrokeCap: CircularStrokeCap.round,
+            progressColor: Colors.greenAccent,
+            backgroundColor: Colors.white12,
+          ),
+          ],
         ),
       ),
+    ),
+    ),
     );
   }
 }
