@@ -24,7 +24,7 @@ void main() async {
 
   await resetUserMetricsIfNeeded(); // Check and reset metrics
 
-  runApp(const MyApp());
+  runApp(const PedometerPage());
 }
 
 Future<void> resetUserMetricsIfNeeded() async {
