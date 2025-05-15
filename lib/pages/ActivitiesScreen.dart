@@ -6,6 +6,7 @@ import 'package:fitness_app_capstone/pages/custom_drawer.dart';
 import 'package:fitness_app_capstone/pages/MetricsPage.dart';
 import 'package:provider/provider.dart';
 
+import '../util/goal_manager.dart';
 import '../util/step_tracker_service.dart';
 class ActivitiesScreen extends StatelessWidget {
   const ActivitiesScreen({super.key});
@@ -13,7 +14,9 @@ class ActivitiesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final uid = FirebaseAuth.instance.currentUser?.uid;
-    final steps = context.watch<StepTrackerService>().steps;
+    final steps = context
+        .watch<StepTrackerService>()
+        .steps;
 
     return Scaffold(
       drawer: const CustomDrawer(),
@@ -22,20 +25,28 @@ class ActivitiesScreen extends StatelessWidget {
         backgroundColor: const Color(0xFF006d77),
         elevation: 0,
         title: StreamBuilder<DocumentSnapshot>(
-          stream: FirebaseFirestore.instance.collection('users').doc(uid).snapshots(),
+          stream: FirebaseFirestore.instance
+              .collection('users')
+              .doc(uid)
+              .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData || !snapshot.data!.exists) {
-              return const Text('Welcome back!', style: TextStyle(color: Colors.white));
+              return const Text(
+                  'Welcome back!', style: TextStyle(color: Colors.white));
             }
             final fullName = snapshot.data!.get('fullName') ?? "";
-            return Text('Welcome back, $fullName', style: const TextStyle(color: Colors.white));
+            return Text('Welcome back, $fullName',
+                style: const TextStyle(color: Colors.white));
           },
         ),
         actions: const [
         ],
       ),
       body: StreamBuilder<DocumentSnapshot>(
-        stream: FirebaseFirestore.instance.collection('users').doc(uid).snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection('users')
+            .doc(uid)
+            .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData || !snapshot.data!.exists) {
             return const Center(child: CircularProgressIndicator());
@@ -61,14 +72,17 @@ class ActivitiesScreen extends StatelessWidget {
                     color: Colors.teal[100],
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Text("You're ${(stepProgress * 100).toStringAsFixed(0)}% to your step goal!\nKeep it up!",
-                      style: const TextStyle(color: Colors.teal, fontWeight: FontWeight.bold)),
+                  child: Text("You're ${(stepProgress * 100).toStringAsFixed(
+                      0)}% to your step goal!\nKeep it up!",
+                      style: const TextStyle(
+                          color: Colors.teal, fontWeight: FontWeight.bold)),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _metricCard("Steps", steps, stepProgress, Colors.cyan),
-                    _metricCard("Calories", calories, calorieProgress, Colors.green),
+                    _metricCard(
+                        "Calories", calories, calorieProgress, Colors.green),
                   ],
                 ),
                 const SizedBox(height: 12),
@@ -126,12 +140,14 @@ class ActivitiesScreen extends StatelessWidget {
               radius: 40.0,
               lineWidth: 6.0,
               percent: progress,
-              center: Text('$value', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              center: Text('$value', style: const TextStyle(
+                  fontSize: 18, fontWeight: FontWeight.bold)),
               progressColor: color,
             ),
             const SizedBox(height: 8),
             Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-            Text("${(progress * 100).toStringAsFixed(0)}%", style: TextStyle(color: color)),
+            Text("${(progress * 100).toStringAsFixed(0)}%",
+                style: TextStyle(color: color)),
           ],
         ),
       ),
@@ -164,34 +180,60 @@ class ActivitiesScreen extends StatelessWidget {
   }
 
   Widget _goalsCard() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Text("Today's Goals", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          SizedBox(height: 10),
-          CheckboxListTile(
-            value: true,
-            onChanged: null,
-            title: Text("Reach 3500 Calories"),
-          ),
-          CheckboxListTile(
-            value: true,
-            onChanged: null,
-            title: Text("Drink 2 L Water"),
-          ),
-          CheckboxListTile(
-            value: true,
-            onChanged: null,
-            title: Text("Log a Workout"),
-          ),
-        ],
-      ),
+    return FutureBuilder<Map<String, dynamic>?>(
+      future: GoalManager.getTodayGoals(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData || snapshot.data == null) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        final goals = List<String>.from(snapshot.data!['goals']);
+        final completed = List<bool>.from(snapshot.data!['completed']);
+        double progress = completed
+            .where((c) => c)
+            .length / goals.length;
+
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("Today's Goals",
+                      style: TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 10),
+                  ...List.generate(goals.length, (index) {
+                    return CheckboxListTile(
+                      value: completed[index],
+                      onChanged: (value) async {
+                        await GoalManager.toggleGoalCompletion(index, value!);
+                        completed[index] = value;
+                        setState(() {
+                          progress = completed
+                              .where((c) => c)
+                              .length / goals.length;
+                        });
+                      },
+                      title: Text(goals[index]),
+                      controlAffinity: ListTileControlAffinity.leading,
+                    );
+                  }),
+                  const SizedBox(height: 10),
+                  LinearProgressIndicator(value: progress),
+                  const SizedBox(height: 5),
+                  Text('${(progress * 100).toInt()}% completed'),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

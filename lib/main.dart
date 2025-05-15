@@ -3,6 +3,7 @@ import 'package:fitness_app_capstone/CaloriesBurned.dart';
 import 'package:fitness_app_capstone/pages/login.dart';
 import 'package:fitness_app_capstone/pages/pedometer.dart';
 import 'package:fitness_app_capstone/pages/widgets/sleep_tracker.dart';
+import 'package:fitness_app_capstone/util/goal_manager.dart';
 import 'package:fitness_app_capstone/util/step_calorie_updater.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -27,6 +28,8 @@ void main() async {
 
   await resetUserMetricsIfNeeded();
   await StepCalorieUpdater.updateCaloriesFromSteps();
+  await GoalManager.assignDailyGoalsIfNeeded();
+
 
 
   runApp(
