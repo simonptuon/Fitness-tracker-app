@@ -19,7 +19,7 @@ class SleepSchedule extends StatelessWidget {
                 children: [
                   Text("Good Morning ",
                       style:
-                          TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
+                      TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
                   Text("🌞", style: TextStyle(fontSize: 24)),
                 ],
               ),
