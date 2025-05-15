@@ -15,23 +15,83 @@ class _SleepTrackerPageState extends State<SleepTrackerPage> {
   TimeOfDay? _sleepTime;
   TimeOfDay? _wakeTime;
   String? _duration;
+  List<Map<String, dynamic>> sleepLogs = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchSleepLogs();
+  }
+
+  Future<void> fetchSleepLogs() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return;
+
+    final snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('sleepLogs')
+        .orderBy('timestamp', descending: true)
+        .get();
+
+    final logs = snapshot.docs.map((doc) {
+      final data = doc.data();
+      return {
+        'sleepTime': data['sleepTime'],
+        'wakeTime': data['wakeTime'],
+        'duration': data['duration'],
+        'timestamp': (data['timestamp'] as Timestamp).toDate(),
+      };
+    }).toList();
+
+    setState(() {
+      sleepLogs = logs;
+    });
+  }
 
   Future<void> saveSleepData() async {
     if (_sleepTime == null || _wakeTime == null) return;
 
-    final sleepDateTime = DateTime(0, 0, 0, _sleepTime!.hour, _sleepTime!.minute);
-    final wakeDateTime = DateTime(0, 0, _wakeTime!.hour < _sleepTime!.hour ? 1 : 0, _wakeTime!.hour, _wakeTime!.minute);
+    final now = DateTime.now();
+    final sleepDateTime = DateTime(now.year, now.month, now.day, _sleepTime!.hour, _sleepTime!.minute);
+    final wakeDateTime = DateTime(
+      now.year,
+      now.month,
+      now.day + (_wakeTime!.hour < _sleepTime!.hour ? 1 : 0),
+      _wakeTime!.hour,
+      _wakeTime!.minute,
+    );
     final duration = wakeDateTime.difference(sleepDateTime);
 
-    setState(() {
-      _duration = duration.inHours.toString().padLeft(2, '0') + ':' + (duration.inMinutes % 60).toString().padLeft(2, '0');
-    });
-
+    final durationStr = '${duration.inHours.toString().padLeft(2, '0')}:${(duration.inMinutes % 60).toString().padLeft(2, '0')}';
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid == null) return;
 
+    final timestamp = DateTime.now();
+
     await FirebaseFirestore.instance.collection('users').doc(uid).update({
-      'sleep': _duration,
+      'sleep': durationStr,
+    });
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('sleepLogs')
+        .add({
+      'sleepTime': _sleepTime!.format(context),
+      'wakeTime': _wakeTime!.format(context),
+      'duration': durationStr,
+      'timestamp': timestamp,
+    });
+
+    setState(() {
+      _duration = durationStr;
+      sleepLogs.insert(0, {
+        'sleepTime': _sleepTime!.format(context),
+        'wakeTime': _wakeTime!.format(context),
+        'duration': durationStr,
+        'timestamp': timestamp,
+      });
     });
   }
 
@@ -61,10 +121,9 @@ class _SleepTrackerPageState extends State<SleepTrackerPage> {
         title: const Text('Sleep Tracker'),
         backgroundColor: Colors.deepPurple,
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
               'Log Your Sleep',
@@ -89,7 +148,30 @@ class _SleepTrackerPageState extends State<SleepTrackerPage> {
               Text(
                 'You slept for $_duration hours',
                 style: const TextStyle(fontSize: 20, color: Colors.purple),
-              )
+              ),
+            const SizedBox(height: 40),
+            const Divider(thickness: 1),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Sleep Log',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ),
+            const SizedBox(height: 10),
+            ...sleepLogs.map((log) => ListTile(
+              leading: const Icon(Icons.bedtime, color: Colors.deepPurple),
+              title: Text('${log['sleepTime']} → ${log['wakeTime']}'),
+              subtitle: Text('Slept for ${log['duration']} on ${DateFormat('MMM d, yyyy').format(log['timestamp'])}'),
+            )),
+            if (sleepLogs.isEmpty)
+              const Padding(
+                padding: EdgeInsets.only(top: 10),
+                child: Text(
+                  'No sleep entries yet',
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ),
           ],
         ),
       ),

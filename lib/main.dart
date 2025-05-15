@@ -7,7 +7,8 @@ import 'package:fitness_app_capstone/util/step_calorie_updater.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-
+import 'package:provider/provider.dart';
+import 'util/step_tracker_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fitness_app_capstone/pie_chart.dart';
 import 'package:fitness_app_capstone/pages/signup.dart';
@@ -28,7 +29,14 @@ void main() async {
   await StepCalorieUpdater.updateCaloriesFromSteps();
 
 
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => StepTrackerService()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 Future<void> resetUserMetricsIfNeeded() async {

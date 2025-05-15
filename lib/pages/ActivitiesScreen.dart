@@ -4,13 +4,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness_app_capstone/pages/custom_drawer.dart';
 import 'package:fitness_app_capstone/pages/MetricsPage.dart';
+import 'package:provider/provider.dart';
 
+import '../util/step_tracker_service.dart';
 class ActivitiesScreen extends StatelessWidget {
   const ActivitiesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final uid = FirebaseAuth.instance.currentUser?.uid;
+    final steps = context.watch<StepTrackerService>().steps;
 
     return Scaffold(
       drawer: const CustomDrawer(),
@@ -29,13 +32,6 @@ class ActivitiesScreen extends StatelessWidget {
           },
         ),
         actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 16),
-            child: CircleAvatar(
-              backgroundColor: Colors.white,
-              child: Icon(Icons.mic, color: Colors.teal),
-            ),
-          ),
         ],
       ),
       body: StreamBuilder<DocumentSnapshot>(

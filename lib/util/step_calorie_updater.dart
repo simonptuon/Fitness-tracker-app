@@ -11,9 +11,21 @@ class StepCalorieUpdater {
     if (!snapshot.exists) return;
 
     final data = snapshot.data()!;
-    final int steps = data['stepCount'] ?? 0;
-    final int calories = (steps * 0.04).round();
+    final int oldSteps = data['lastStepUpdate'] ?? 0;
+    final int currentSteps = data['stepCount'] ?? 0;
 
-    await userRef.update({'caloriesBurned': calories});
+    final int newSteps = currentSteps - oldSteps;
+    if (newSteps <= 0) return;
+
+    final int additionalCalories = (newSteps * 0.04).round();
+    final int totalCalories = (currentSteps * 0.04).round();
+
+    await userRef.update({
+      'caloriesBurned': totalCalories,
+      'weeklyCaloriesBurned': (data['weeklyCaloriesBurned'] ?? 0) + additionalCalories,
+      'monthlyCaloriesBurned': (data['monthlyCaloriesBurned'] ?? 0) + additionalCalories,
+      'yearlyCaloriesBurned': (data['yearlyCaloriesBurned'] ?? 0) + additionalCalories,
+      'lastStepUpdate': currentSteps,
+    });
   }
 }
