@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: WorkoutPlans(),
+      home: PedometerPage(),
       routes: {
         '/login': (context) => const Login(),
         '/activities': (context) => const ActivitiesScreen(),
