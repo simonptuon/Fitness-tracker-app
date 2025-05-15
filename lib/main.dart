@@ -1,7 +1,9 @@
 
 import 'package:fitness_app_capstone/CaloriesBurned.dart';
+import 'package:fitness_app_capstone/pages/login.dart';
 import 'package:fitness_app_capstone/pages/pedometer.dart';
 import 'package:fitness_app_capstone/pages/widgets/sleep_tracker.dart';
+import 'package:fitness_app_capstone/util/step_calorie_updater.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -9,7 +11,6 @@ import 'firebase_options.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fitness_app_capstone/pie_chart.dart';
 import 'package:fitness_app_capstone/pages/signup.dart';
-import 'package:fitness_app_capstone/pages/loginui.dart';
 import 'package:fitness_app_capstone/pages/ActivitiesScreen.dart';
 import 'package:fitness_app_capstone/pages/Water.dart';
 import 'WorkoutPlans.dart';
@@ -24,6 +25,8 @@ void main() async {
   );
 
   await resetUserMetricsIfNeeded();
+  await StepCalorieUpdater.updateCaloriesFromSteps();
+
 
   runApp(const MyApp());
 }
@@ -150,7 +153,7 @@ class MyApp extends StatelessWidget {
       ),
       home: SignUpPage(),
       routes: {
-        '/login': (context) => const Login(),
+        '/login': (context) => const LoginPage(),
         '/activities': (context) => ActivitiesScreen(),
         '/consumption': (context) => const WaterTrackerPage(),
         '/pedometer': (context) => const PedometerPage(),

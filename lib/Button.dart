@@ -8,7 +8,7 @@ class Button extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        SizedBox(height: 5), // Adjust the height to move the button up
+        SizedBox(height: 5),
         GestureDetector(
           onTap: () {
             // Navigate to login screen
