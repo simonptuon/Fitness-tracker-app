@@ -1,14 +1,18 @@
 
 import 'package:fitness_app_capstone/CaloriesBurned.dart';
+import 'package:fitness_app_capstone/pages/login.dart';
 import 'package:fitness_app_capstone/pages/pedometer.dart';
+import 'package:fitness_app_capstone/pages/widgets/sleep_tracker.dart';
+import 'package:fitness_app_capstone/util/goal_manager.dart';
+import 'package:fitness_app_capstone/util/step_calorie_updater.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-
+import 'package:provider/provider.dart';
+import 'util/step_tracker_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fitness_app_capstone/pie_chart.dart';
 import 'package:fitness_app_capstone/pages/signup.dart';
-import 'package:fitness_app_capstone/pages/loginui.dart';
 import 'package:fitness_app_capstone/pages/ActivitiesScreen.dart';
 import 'package:fitness_app_capstone/pages/Water.dart';
 import 'WorkoutPlans.dart';
@@ -23,8 +27,19 @@ void main() async {
   );
 
   await resetUserMetricsIfNeeded();
+  await StepCalorieUpdater.updateCaloriesFromSteps();
+  await GoalManager.assignDailyGoalsIfNeeded();
 
-  runApp(const MyApp());
+
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => StepTrackerService()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 Future<void> resetUserMetricsIfNeeded() async {
@@ -40,14 +55,15 @@ Future<void> resetUserMetricsIfNeeded() async {
   final now = Timestamp.now();
   final nowDate = now.toDate();
 
-  final lastDaily = (data['lastDailyUpdate'] as Timestamp).toDate();
-  final lastWeekly = (data['lastWeeklyUpdate'] as Timestamp).toDate();
-  final lastMonthly = (data['lastMonthlyUpdate'] as Timestamp).toDate();
-  final lastYearly = (data['lastYearlyUpdate'] as Timestamp).toDate();
+  final lastDaily = (data['lastDailyUpdate'] as Timestamp?)?.toDate();
+  final lastWeekly = (data['lastWeeklyUpdate'] as Timestamp?)?.toDate();
+  final lastMonthly = (data['lastMonthlyUpdate'] as Timestamp?)?.toDate();
+  final lastYearly = (data['lastYearlyUpdate'] as Timestamp?)?.toDate();
+
 
   final updates = <String, dynamic>{};
 
-  if (!_isSameDay(nowDate, lastDaily)) {
+  if (lastDaily == null || !_isSameDay(nowDate, lastDaily)) {
     updates.addAll({
       'caloriesBurned': 0,
       'waterConsumed': 0,
@@ -58,7 +74,7 @@ Future<void> resetUserMetricsIfNeeded() async {
     });
   }
 
-  if (!_isSameWeek(nowDate, lastWeekly)) {
+  if (lastWeekly == null || !_isSameWeek(nowDate, lastWeekly)) {
     updates.addAll({
       'weeklyCaloriesBurned': 0,
       'weeklyWaterConsumed': 0,
@@ -69,7 +85,7 @@ Future<void> resetUserMetricsIfNeeded() async {
     });
   }
 
-  if (!_isSameMonth(nowDate, lastMonthly)) {
+  if (lastMonthly == null || !_isSameMonth(nowDate, lastMonthly)) {
     updates.addAll({
       'monthlyCaloriesBurned': 0,
       'monthlyWaterConsumed': 0,
@@ -80,7 +96,7 @@ Future<void> resetUserMetricsIfNeeded() async {
     });
   }
 
-  if (!_isSameYear(nowDate, lastYearly)) {
+  if (lastYearly == null || !_isSameYear(nowDate, lastYearly)) {
     updates.addAll({
       'yearlyCaloriesBurned': 0,
       'yearlyWaterConsumed': 0,
@@ -90,6 +106,7 @@ Future<void> resetUserMetricsIfNeeded() async {
       'lastYearlyUpdate': now,
     });
   }
+
 
   if (updates.isNotEmpty) {
     await userRef.update(updates);
@@ -147,12 +164,13 @@ class MyApp extends StatelessWidget {
       ),
       home: SignUpPage(),
       routes: {
-        '/login': (context) => const Login(),
-        '/activities': (context) => const ActivitiesScreen(),
+        '/login': (context) => const LoginPage(),
+        '/activities': (context) => ActivitiesScreen(),
         '/consumption': (context) => const WaterTrackerPage(),
         '/pedometer': (context) => const PedometerPage(),
         '/workoutplans': (context) => WorkoutPlans(),
         '/calories': (context) => CaloriesBurned(),
+        '/sleep': (context) => const SleepTrackerPage(),
       },
     );
   }

@@ -68,6 +68,13 @@ class CustomDrawer extends StatelessWidget {
             },
           ),
           ListTile(
+            leading: const Icon(Icons.bedtime),
+            title: const Text('Sleep Tracker'),
+            onTap: () {
+              Navigator.pushReplacementNamed(context, '/sleep');
+            },
+          ),
+          ListTile(
             leading: Icon(Icons.logout),
             title: Text('Logout'),
             onTap: () {

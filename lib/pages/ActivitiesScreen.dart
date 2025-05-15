@@ -1,435 +1,239 @@
-import 'package:fitness_app_capstone/pages/custom_drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:percent_indicator/percent_indicator.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitness_app_capstone/pages/custom_drawer.dart';
+import 'package:fitness_app_capstone/pages/MetricsPage.dart';
+import 'package:provider/provider.dart';
 
-class ActivitiesScreen extends StatefulWidget {
+import '../util/goal_manager.dart';
+import '../util/step_tracker_service.dart';
+class ActivitiesScreen extends StatelessWidget {
   const ActivitiesScreen({super.key});
 
   @override
-  _ActivitiesScreenState createState() => _ActivitiesScreenState();
-}
-
-const Color backgroundColor = Color(0xFF1c2e65);
-const Color backgroundColor2 = Color(0xFF4e6cbb);
-const Color testColor = Color(0xFF3D78EA);
-const Color testColor2 = Color(0xFF1D66AA);
-const Color backgroundColorCard = Color(0xFF483867);
-const Color backgroundColorCard2 = Color(0xFF3D78EA);
-
-const Color textColor = Color(0xFF0C0C0C);
-const Color textColor2 = Color(0xFFF9F6EE);
-const Color iconColor = Color(0xFF583867);
-
-class _ActivitiesScreenState extends State<ActivitiesScreen> {
-  String selectedFilter = 'Daily';
-  final List<String> filters = ['Daily', 'Weekly', 'Monthly', 'Yearly'];
-  bool showStepsProgress = true;
-
-  // Helper method to get data based on selected time period
-  Map<String, dynamic> _getTimePeriodData(Map<String, dynamic> data) {
-    switch (selectedFilter) {
-      case 'Weekly':
-        return {
-          'steps': data['weeklySteps'] ?? 0,
-          'sleep': data['weeklySleep'] ?? '56:00',
-          'heartRate': data['weeklyHeartRate'] ?? 72,
-          'calories': data['weeklyCaloriesBurned'] ?? 2625,
-          'goalSteps': 70000,
-          'goalCalories': 21000,
-        };
-      case 'Monthly':
-        return {
-          'steps': data['monthlySteps'] ?? 0,
-          'sleep': data['monthlySleep'] ?? '240:00',
-          'heartRate': data['monthlyHeartRate'] ?? 72,
-          'calories': data['monthlyCaloriesBurned'] ?? 11250,
-          'goalSteps': 300000,
-          'goalCalories': 90000,
-        };
-      case 'Yearly':
-        return {
-          'steps': data['yearlySteps'] ?? 0,
-          'sleep': data['yearlySleep'] ?? '2920:00',
-          'heartRate': data['yearlyHeartRate'] ?? 72,
-          'calories': data['yearlyCaloriesBurned'] ?? 136875,
-          'goalSteps': 3650000,
-          'goalCalories': 1095000,
-        };
-      case 'Daily':
-      default:
-        return {
-          'steps': data['stepCount'] ?? 0,
-          'sleep': data['sleep'] ?? '8:00',
-          'heartRate': data['heartRate'] ?? 72,
-          'calories': data['caloriesBurned'] ?? 375,
-          'goalSteps': 10000,
-          'goalCalories': 3000,
-        };
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    final steps = context
+        .watch<StepTrackerService>()
+        .steps;
+
     return Scaffold(
       drawer: const CustomDrawer(),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomLeft,
-            colors: [backgroundColor, backgroundColor2],
-          ),
+      backgroundColor: const Color(0xFF006d77),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF006d77),
+        elevation: 0,
+        title: StreamBuilder<DocumentSnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection('users')
+              .doc(uid)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData || !snapshot.data!.exists) {
+              return const Text(
+                  'Welcome back!', style: TextStyle(color: Colors.white));
+            }
+            final fullName = snapshot.data!.get('fullName') ?? "";
+            return Text('Welcome back, $fullName',
+                style: const TextStyle(color: Colors.white));
+          },
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              AppBar(
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                title: Text('$selectedFilter Activities', style: const TextStyle(color: Colors.black)),
-                titleTextStyle: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Poppins',
-                ),
-                actions: const [
-                  Padding(
-                    padding: EdgeInsets.only(right: 16.0),
-                    child: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      child: Icon(Icons.person, color: Colors.teal),
-                    ),
-                  ),
-                ],
-              ),
-              TextField(
-                decoration: InputDecoration(
-                  hintText: 'Search',
-                  hintStyle: const TextStyle(color: Colors.grey, fontSize: 16),
-                  prefixIcon: const Icon(Icons.search, color: Colors.grey),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: filters.map((filter) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                    child: TextButton(
-                      onPressed: () {
-                        setState(() {
-                          selectedFilter = filter;
-                        });
-                      },
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                        backgroundColor: Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                          side: const BorderSide(color: Colors.transparent),
-                        ),
-                      ),
-                      child: Ink(
-                        decoration: BoxDecoration(
-                          gradient: selectedFilter == filter
-                              ? const LinearGradient(
-                            colors: [testColor2, testColor],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          )
-                              : null,
-                          borderRadius: BorderRadius.circular(18),
-                        ),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
-                          child: Text(
-                            filter,
-                            style: TextStyle(
-                              color: textColor,
-                              fontWeight: selectedFilter == filter ? FontWeight.bold : FontWeight.w500,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-              const SizedBox(height: 10),
-              Expanded(
-                child: StreamBuilder<DocumentSnapshot>(
-                  stream: FirebaseFirestore.instance
-                      .collection('users')
-                      .doc(FirebaseAuth.instance.currentUser?.uid)
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData || !snapshot.data!.exists) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-
-                    final data = snapshot.data!.data() as Map<String, dynamic>;
-                    final periodData = _getTimePeriodData(data);
-
-                    return SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          GridView(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              childAspectRatio: 1.0,
-                              crossAxisSpacing: 12,
-                              mainAxisSpacing: 12,
-                            ),
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    showStepsProgress = !showStepsProgress;
-                                  });
-                                },
-                                child: _buildActivityCard(
-                                  icon: Icons.directions_walk_outlined,
-                                  title: 'Steps',
-                                  value: periodData['steps'].toString(),
-                                  unit: 'steps',
-                                  height: 240,
-                                  circularIndicator: AnimatedSwitcher(
-                                    duration: const Duration(milliseconds: 300),
-                                    transitionBuilder: (Widget child, Animation<double> animation) {
-                                      return ScaleTransition(scale: animation, child: child);
-                                    },
-                                    child: showStepsProgress
-                                        ? CircularPercentIndicator(
-                                      key: const ValueKey('progress'),
-                                      radius: 40.0,
-                                      lineWidth: 4.0,
-                                      percent: (periodData['steps'] / periodData['goalSteps']).clamp(0.0, 1.0),
-                                      center: Text(
-                                        "${((periodData['steps'] / periodData['goalSteps']) * 100).toInt()}%\nSteps",
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                            color: iconColor),
-                                      ),
-                                      progressColor: iconColor,
-                                      backgroundColor: Colors.white24,
-                                      circularStrokeCap: CircularStrokeCap.round,
-                                      animation: true,
-                                      animationDuration: 1200,
-                                    )
-                                        : Column(
-                                      key: const ValueKey('count'),
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          '${periodData['steps']}',
-                                          style: const TextStyle(
-                                            fontSize: 30,
-                                            fontWeight: FontWeight.bold,
-                                            color: iconColor,
-                                          ),
-                                        ),
-                                        Text(
-                                          '/ ${periodData['goalSteps']}',
-                                          style: const TextStyle(
-                                            fontSize: 20,
-                                            color: iconColor,
-                                          ),
-                                        ),
-                                        const Text(
-                                          'steps',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: iconColor,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              _buildActivityCard(
-                                icon: Icons.bedtime_outlined,
-                                title: 'Sleep',
-                                value: periodData['sleep'].toString(),
-                                unit: 'h',
-                                height: 150,
-                                titleColor: Colors.white,
-                                colorIcon: Colors.white,
-                                iconColorBG: Colors.white,
-                              ),
-                              _buildActivityCard(
-                                icon: Icons.favorite_outline,
-                                title: 'Heart',
-                                value: periodData['heartRate'].toString(),
-                                unit: 'bpm',
-                                height: 180,
-                              ),
-                              _buildActivityCard(
-                                icon: Icons.local_fire_department_outlined,
-                                title: 'Kcal',
-                                value: periodData['calories'].toString(),
-                                unit: 'kcal',
-                                height: 240,
-                                circularIndicator: CircularPercentIndicator(
-                                  radius: 40.0,
-                                  lineWidth: 4.0,
-                                  percent: (periodData['calories'] / periodData['goalCalories']).clamp(0.0, 1.0),
-                                  center: Text(
-                                    "${periodData['calories']}\nKcal",
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: iconColor),
-                                  ),
-                                  progressColor: iconColor,
-                                  backgroundColor: Colors.white24,
-                                  circularStrokeCap: CircularStrokeCap.round,
-                                  animation: true,
-                                  animationDuration: 1200,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 5),
-                          _buildMealCard(),
-                          const SizedBox(height: 5),
-                          _buildMealCard(),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
+        actions: const [
+        ],
       ),
-    );
-  }
+      body: StreamBuilder<DocumentSnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('users')
+            .doc(uid)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData || !snapshot.data!.exists) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-  Widget _buildActivityCard({
-    required IconData icon,
-    required String title,
-    required String value,
-    required String unit,
-    double? height,
-    Color? titleColor,
-    Color? colorIcon,
-    Color? iconColorBG,
-    Widget? circularIndicator,
-  }) {
-    return Container(
-      height: height,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20.0),
-        gradient: title == 'Sleep'
-            ? const LinearGradient(
-          colors: [backgroundColorCard, backgroundColorCard2],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        )
-            : null,
-        color: title == 'Sleep' ? null : Colors.white,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          final data = snapshot.data!.data() as Map<String, dynamic>;
+          final steps = data['stepCount'] ?? 0;
+          final calories = (steps * 0.04).round();
+          final water = data['waterConsumed'] ?? 0;
+
+          final stepProgress = (steps / 10000).clamp(0.0, 1.0);
+          final calorieProgress = (calories / 3500).clamp(0.0, 1.0);
+          final waterProgress = (water / 2500).clamp(0.0, 1.0);
+
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: ListView(
               children: [
-                Text(title,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30,
-                        color: title == 'Sleep' ? Colors.white : titleColor)),
                 Container(
+                  padding: const EdgeInsets.all(16),
+                  margin: const EdgeInsets.symmetric(vertical: 12),
                   decoration: BoxDecoration(
-                    color: title == 'Sleep' ? Colors.white : iconColor,
-                    borderRadius: BorderRadius.circular(50.0),
+                    color: Colors.teal[100],
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  padding: const EdgeInsets.all(8.0),
-                  child: Icon(icon,
-                      size: 32,
-                      color: title == 'Sleep' ? Colors.black : Colors.white),
+                  child: Text("You're ${(stepProgress * 100).toStringAsFixed(
+                      0)}% to your step goal!\nKeep it up!",
+                      style: const TextStyle(
+                          color: Colors.teal, fontWeight: FontWeight.bold)),
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _metricCard("Steps", steps, stepProgress, Colors.cyan),
+                    _metricCard(
+                        "Calories", calories, calorieProgress, Colors.green),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _metricCard("Water", water, waterProgress, Colors.blue),
+                    _achievementCard(),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                _goalsCard(),
               ],
             ),
-            const SizedBox(height: 8),
-            if (circularIndicator != null)
-              Expanded(child: Center(child: circularIndicator)),
-            if (circularIndicator == null) ...[
-              Row(
-                children: [
-                  Text(value,
-                      style: TextStyle(
-                          fontSize: 25,
-                          color: title == 'Sleep' ? Colors.white : colorIcon)),
-                  const SizedBox(width: 4),
-                  Text(unit,
-                      style: TextStyle(
-                          color: title == 'Sleep' ? Colors.white : null)),
-                ],
-              ),
-            ],
+          );
+        },
+      ),
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 8,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            const Icon(Icons.home, size: 30),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MetricsPage()),
+                );
+              },
+              child: const Icon(Icons.show_chart, size: 30),
+            ),
+            const Icon(Icons.settings, size: 30),
+            const Icon(Icons.person, size: 30),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildMealCard() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0),
+
+  Widget _metricCard(String title, int value, double progress, Color color) {
+    return Expanded(
       child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 4),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(20.0),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              spreadRadius: 2,
-              blurRadius: 5,
-              offset: const Offset(0, 3),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          children: [
+            CircularPercentIndicator(
+              radius: 40.0,
+              lineWidth: 6.0,
+              percent: progress,
+              center: Text('$value', style: const TextStyle(
+                  fontSize: 18, fontWeight: FontWeight.bold)),
+              progressColor: color,
             ),
+            const SizedBox(height: 8),
+            Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+            Text("${(progress * 100).toStringAsFixed(0)}%",
+                style: TextStyle(color: color)),
           ],
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('$selectedFilter Meals',
-                      style:
-                      const TextStyle(fontWeight: FontWeight.w500, fontSize: 25)),
-                  const Icon(Icons.restaurant_menu_outlined,
-                      color: iconColor, size: 32),
-                ],
-              ),
-              const SizedBox(height: 5),
-              Text('No meals logged this $selectedFilter.toLowerCase().',
-                  style: const TextStyle(color: Colors.black54))
-            ],
-          ),
+      ),
+    );
+  }
+
+  Widget _achievementCard() {
+    return Expanded(
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 4),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          children: const [
+            Icon(Icons.directions_walk, color: Colors.orange),
+            Text("10K Steps"),
+            SizedBox(height: 8),
+            Icon(Icons.flash_on, color: Colors.amber),
+            Text("7d Streak!"),
+            SizedBox(height: 8),
+            Icon(Icons.star, color: Colors.purple),
+            Text("Pro"),
+          ],
         ),
       ),
+    );
+  }
+
+  Widget _goalsCard() {
+    return FutureBuilder<Map<String, dynamic>?>(
+      future: GoalManager.getTodayGoals(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData || snapshot.data == null) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        final goals = List<String>.from(snapshot.data!['goals']);
+        final completed = List<bool>.from(snapshot.data!['completed']);
+        double progress = completed
+            .where((c) => c)
+            .length / goals.length;
+
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("Today's Goals",
+                      style: TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 10),
+                  ...List.generate(goals.length, (index) {
+                    return CheckboxListTile(
+                      value: completed[index],
+                      onChanged: (value) async {
+                        await GoalManager.toggleGoalCompletion(index, value!);
+                        completed[index] = value;
+                        setState(() {
+                          progress = completed
+                              .where((c) => c)
+                              .length / goals.length;
+                        });
+                      },
+                      title: Text(goals[index]),
+                      controlAffinity: ListTileControlAffinity.leading,
+                    );
+                  }),
+                  const SizedBox(height: 10),
+                  LinearProgressIndicator(value: progress),
+                  const SizedBox(height: 5),
+                  Text('${(progress * 100).toInt()}% completed'),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

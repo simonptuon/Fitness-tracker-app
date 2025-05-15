@@ -39,10 +39,34 @@ class _WaterTrackerPageState extends State<WaterTrackerPage>
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid == null) return;
 
-    final doc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
-    final data = doc.data();
+    final userDoc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    final userData = userDoc.data();
     setState(() {
-      currentIntake = data?['waterConsumed'] ?? 0;
+      currentIntake = userData?['waterConsumed'] ?? 0;
+    });
+
+    final now = DateTime.now();
+    final todayStart = DateTime(now.year, now.month, now.day);
+    final todayStartTimestamp = Timestamp.fromDate(todayStart);
+
+    final logsQuery = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('waterLogs')
+        .where('timestamp', isGreaterThanOrEqualTo: todayStartTimestamp)
+        .orderBy('timestamp', descending: true)
+        .get();
+
+    final logs = logsQuery.docs.map((doc) {
+      final data = doc.data();
+      return {
+        'amount': data['amount'],
+        'timestamp': (data['timestamp'] as Timestamp).toDate(),
+      };
+    }).toList();
+
+    setState(() {
+      dailyLogs = logs;
     });
   }
 
@@ -50,11 +74,32 @@ class _WaterTrackerPageState extends State<WaterTrackerPage>
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid == null) return;
 
-    final newAmount = currentIntake + amount;
     final timestamp = Timestamp.now();
+    final userRef = FirebaseFirestore.instance.collection('users').doc(uid);
 
-    await FirebaseFirestore.instance.collection('users').doc(uid).update({
-      'waterConsumed': newAmount,
+    await FirebaseFirestore.instance.runTransaction((transaction) async {
+      final snapshot = await transaction.get(userRef);
+      final data = snapshot.data() ?? {};
+
+      final updatedWater = (data['waterConsumed'] ?? 0) + amount;
+      final updatedWeekly = (data['weeklyWaterConsumed'] ?? 0) + amount;
+      final updatedMonthly = (data['monthlyWaterConsumed'] ?? 0) + amount;
+      final updatedYearly = (data['yearlyWaterConsumed'] ?? 0) + amount;
+
+      transaction.update(userRef, {
+        'waterConsumed': updatedWater,
+        'weeklyWaterConsumed': updatedWeekly,
+        'monthlyWaterConsumed': updatedMonthly,
+        'yearlyWaterConsumed': updatedYearly,
+      });
+
+      setState(() {
+        currentIntake = updatedWater;
+        dailyLogs.insert(0, {
+          'amount': amount,
+          'timestamp': timestamp.toDate(),
+        });
+      });
     });
 
     await FirebaseFirestore.instance
@@ -65,15 +110,8 @@ class _WaterTrackerPageState extends State<WaterTrackerPage>
       'amount': amount,
       'timestamp': timestamp,
     });
-
-    setState(() {
-      currentIntake = newAmount;
-      dailyLogs.insert(0, {
-        'amount': amount,
-        'timestamp': timestamp.toDate(),
-      });
-    });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -143,14 +181,14 @@ class _WaterTrackerPageState extends State<WaterTrackerPage>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                  const Text(
-                  'Today\'s Log',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 10),
+                    const Text(
+                      'Today\'s Log',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
                     dailyLogs.isEmpty
                         ? const Padding(
                       padding: EdgeInsets.symmetric(vertical: 20),
@@ -160,15 +198,22 @@ class _WaterTrackerPageState extends State<WaterTrackerPage>
                       ),
                     )
                         : Column(
-                      children: dailyLogs.map((log) => ListTile(
+                      children: dailyLogs
+                          .where((log) {
+                        final now = DateTime.now();
+                        final today = DateTime(now.year, now.month, now.day);
+                        return log['timestamp'].isAfter(today);
+                      })
+                          .map((log) => ListTile(
                         leading: const Icon(Icons.local_drink, color: Colors.blueAccent),
                         title: Text('+${log['amount']} mL'),
                         subtitle: Text(DateFormat('hh:mm a').format(log['timestamp'])),
-                      )).toList(),
+                      ))
+                          .toList(),
                     ),
                   ],
                 ),
-              ),
+              )
             ],
           ),
         ),
