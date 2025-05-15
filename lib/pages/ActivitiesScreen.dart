@@ -3,6 +3,7 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness_app_capstone/pages/custom_drawer.dart';
+import 'package:fitness_app_capstone/pages/MetricsPage.dart';
 
 class ActivitiesScreen extends StatelessWidget {
   const ActivitiesScreen({super.key});
@@ -12,7 +13,7 @@ class ActivitiesScreen extends StatelessWidget {
     final uid = FirebaseAuth.instance.currentUser?.uid;
 
     return Scaffold(
-      drawer: CustomDrawer(),
+      drawer: const CustomDrawer(),
       backgroundColor: const Color(0xFF006d77),
       appBar: AppBar(
         backgroundColor: const Color(0xFF006d77),
@@ -94,23 +95,25 @@ class ActivitiesScreen extends StatelessWidget {
         notchMargin: 8,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: const [
-            Icon(Icons.home, size: 30),
-            Icon(Icons.show_chart, size: 30),
-            SizedBox(width: 48),
-            Icon(Icons.settings, size: 30),
-            Icon(Icons.person, size: 30),
+          children: [
+            const Icon(Icons.home, size: 30),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MetricsPage()),
+                );
+              },
+              child: const Icon(Icons.show_chart, size: 30),
+            ),
+            const Icon(Icons.settings, size: 30),
+            const Icon(Icons.person, size: 30),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
-        backgroundColor: Colors.teal,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
+
 
   Widget _metricCard(String title, int value, double progress, Color color) {
     return Expanded(
